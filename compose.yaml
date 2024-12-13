@@ -33,7 +33,7 @@ services:
       MYSQL_USER: ${DB_USERNAME}
       MYSQL_PASSWORD: ${DB_PASSWORD}
     env_file:
-      - ./backend/.env
+      - ./.env
     ports:
       - "3306:3306"
     volumes:
