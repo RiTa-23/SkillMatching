@@ -21,6 +21,7 @@ export default function Home() {
       <h1>接続テスト</h1>
       <button onClick={fetchData}>apiを叩く</button>
       {message && <p>{message}</p>}
+      <h2>将来的にはサービス説明（企業側）ページにしたい</h2>
     </div>
   );
 }
