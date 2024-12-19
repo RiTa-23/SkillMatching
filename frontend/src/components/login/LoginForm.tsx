@@ -4,8 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 const LoginSchema = z.object({
-  id: z.string(),
-  password: z.string(),
+  id: z.string().min(1, "IDを入力してください"),
+  password: z.string().min(1, "パスワードを入力してください"),
 });
 
 type LoginFormData = z.infer<typeof LoginSchema>;
@@ -28,7 +28,9 @@ const LoginForm = () => {
       <div className="flex flex-col">
         <label className="text-xl">ID</label>
         <input className="text-xl border-2 rounded p-3" {...register("id")} />
-        {errors.id?.message && <p>{errors.id?.message}</p>}
+        {errors.id?.message && (
+          <p className="text-red-500">{errors.id?.message}</p>
+        )}
       </div>
       <div className="flex flex-col">
         <label className="text-xl">パスワード</label>
@@ -37,7 +39,9 @@ const LoginForm = () => {
           className="text-xl border-2 rounded p-3"
           {...register("password")}
         />
-        {errors.password?.message && <p>{errors.password?.message}</p>}
+        {errors.password?.message && (
+          <p className="text-red-500">{errors.password?.message}</p>
+        )}
       </div>
       <div className="flex justify-center">
         <button
