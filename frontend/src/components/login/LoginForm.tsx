@@ -1,34 +1,43 @@
 "use client";
-import { useState } from "react";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+const LoginSchema = z.object({
+  id: z.string(),
+  password: z.string(),
+});
+
+type LoginFormData = z.infer<typeof LoginSchema>;
 
 const LoginForm = () => {
-  const [id, setId] = useState("");
-  const [password, setPassword] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(LoginSchema),
+  });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("ID:", id);
-    console.log("パスワード:", password);
+  const submit = (data: { id: string; password: string }) => {
+    console.log(data);
   };
 
   return (
-    <form className="w-full space-y-6" onSubmit={handleSubmit}>
+    <form className="w-full space-y-6" onSubmit={handleSubmit(submit)}>
       <div className="flex flex-col">
         <label className="text-xl">ID</label>
-        <input
-          className="text-xl border-2 rounded p-3"
-          value={id}
-          onChange={(e) => setId(e.target.value)}
-        />
+        <input className="text-xl border-2 rounded p-3" {...register("id")} />
+        {errors.id?.message && <p>{errors.id?.message}</p>}
       </div>
       <div className="flex flex-col">
         <label className="text-xl">パスワード</label>
         <input
           type="password"
           className="text-xl border-2 rounded p-3"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          {...register("password")}
         />
+        {errors.password?.message && <p>{errors.password?.message}</p>}
       </div>
       <div className="flex justify-center">
         <button
