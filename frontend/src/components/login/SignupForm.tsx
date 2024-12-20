@@ -3,20 +3,20 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-const LoginSchema = z.object({
+const SignupSchema = z.object({
   id: z.string().min(1, "IDを入力してください"),
   password: z.string().min(1, "パスワードを入力してください"),
 });
 
-type LoginFormData = z.infer<typeof LoginSchema>;
+type SignupFormData = z.infer<typeof SignupSchema>;
 
-const LoginForm = () => {
+const SignupForm = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(LoginSchema),
+  } = useForm<SignupFormData>({
+    resolver: zodResolver(SignupSchema),
   });
 
   const submit = (data: { id: string; password: string }) => {
@@ -46,13 +46,13 @@ const LoginForm = () => {
       <div className="flex justify-center">
         <button
           type="submit"
-          className="text-xl text-main-100 bg-main-500 rounded px-4 py-2"
+          className="w-[100%] max-w-[150px] text-xl text-main-100 bg-main-500 rounded px-4 py-2"
         >
-          ログイン
+          登録
         </button>
       </div>
     </form>
   );
 };
 
-export default LoginForm;
+export default SignupForm;
