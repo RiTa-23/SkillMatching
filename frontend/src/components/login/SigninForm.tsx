@@ -1,57 +1,156 @@
 "use client";
+
+import Link from "next/link";
+
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 const SigninSchema = z.object({
   id: z.string().min(1, "IDを入力してください"),
-  password: z.string().min(1, "パスワードを入力してください"),
+  password: z.string().min(1, "Passwordを入力してください"),
 });
 
-type SigninFormData = z.infer<typeof SigninSchema>;
+type SigninFormValues = z.infer<typeof SigninSchema>;
 
 const SigninForm = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SigninFormData>({
+  const form = useForm<SigninFormValues>({
     resolver: zodResolver(SigninSchema),
+    defaultValues: {
+      id: "",
+      password: "",
+    },
   });
 
-  const submit = (data: { id: string; password: string }) => {
-    console.log(data);
+  const signinAsPersonal = (values: SigninFormValues) => {
+    console.log("Signin as personal: ", values);
+  };
+
+  const signinAsCompany = (values: SigninFormValues) => {
+    console.log("Signin as company: ", values);
   };
 
   return (
-    <form className="w-full space-y-6" onSubmit={handleSubmit(submit)}>
-      <div className="flex flex-col">
-        <label className="text-xl">ID</label>
-        <input className="text-xl border-2 rounded p-3" {...register("id")} />
-        {errors.id?.message && (
-          <p className="text-red-500">{errors.id?.message}</p>
-        )}
-      </div>
-      <div className="flex flex-col">
-        <label className="text-xl">パスワード</label>
-        <input
-          type="password"
-          className="text-xl border-2 rounded p-3"
-          {...register("password")}
-        />
-        {errors.password?.message && (
-          <p className="text-red-500">{errors.password?.message}</p>
-        )}
-      </div>
-      <div className="flex justify-center">
-        <button
-          type="submit"
-          className="w-[100%] max-w-[150px] text-xl text-main-100 bg-main-500 rounded px-4 py-2"
-        >
-          ログイン
-        </button>
-      </div>
-    </form>
+    <Tabs defaultValue="account" className="w-[400px]">
+      <TabsList className="grid w-full grid-cols-2">
+        <TabsTrigger value="account">個人用</TabsTrigger>
+        <TabsTrigger value="password">企業用</TabsTrigger>
+      </TabsList>
+      <TabsContent value="account">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-center">個人用ログイン</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(signinAsPersonal)}
+                className="space-y-8"
+              >
+                <FormField
+                  control={form.control}
+                  name="id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>ID</FormLabel>
+                      <FormControl>
+                        <Input placeholder="id" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input placeholder="password" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex justify-center">
+                  <Button type="submit">ログイン</Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+          <CardFooter className="justify-center">
+            <Link href="/signup" className="border-b-2 mb-2">
+              新規登録はこちら
+            </Link>
+          </CardFooter>
+        </Card>
+      </TabsContent>
+      <TabsContent value="password">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-center">企業用ログイン</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(signinAsCompany)}
+                className="space-y-8"
+              >
+                <FormField
+                  control={form.control}
+                  name="id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>ID</FormLabel>
+                      <FormControl>
+                        <Input placeholder="id" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input placeholder="password" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex justify-center">
+                  <Button type="submit">ログイン</Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </Tabs>
   );
 };
 
