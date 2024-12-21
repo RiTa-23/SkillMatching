@@ -41,8 +41,12 @@ const SigninForm = () => {
     },
   });
 
-  const onSubmit = (values: SigninFormValues) => {
-    console.log(values);
+  const signinAsPersonal = (values: SigninFormValues) => {
+    console.log("Signin as personal: ", values);
+  };
+
+  const signinAsCompany = (values: SigninFormValues) => {
+    console.log("Signin as company: ", values);
   };
 
   return (
@@ -59,7 +63,7 @@ const SigninForm = () => {
           <CardContent className="space-y-2">
             <Form {...form}>
               <form
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={form.handleSubmit(signinAsPersonal)}
                 className="space-y-8"
               >
                 <FormField
@@ -109,7 +113,7 @@ const SigninForm = () => {
           <CardContent className="space-y-2">
             <Form {...form}>
               <form
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={form.handleSubmit(signinAsCompany)}
                 className="space-y-8"
               >
                 <FormField
