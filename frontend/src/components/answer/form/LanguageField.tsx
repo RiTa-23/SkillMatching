@@ -87,7 +87,7 @@ const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
             <Command>
               <CommandInput placeholder="Search language..." />
               <CommandList>
-                <CommandEmpty>No language found.</CommandEmpty>
+                <CommandEmpty>見つかりません</CommandEmpty>
                 <CommandGroup>
                   {languages.map((language) => (
                     <CommandItem
@@ -120,10 +120,9 @@ const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
           variant="destructive"
           onClick={() => remove(index)}
         >
-          <Trash2 className="w-4 h-4" />
+          <Trash2 />
         </Button>
       </div>
-
       <FormField
         control={form.control}
         name={`languages.${index}.level`}
@@ -141,7 +140,7 @@ const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
                     form.setValue(`languages.${index}.level`, value[0])
                   }
                 />
-                <span>{levelLabels[(field.value || 1) - 1] || "初心者"}</span>
+                <span className="w-1/4 pl-4">{levelLabels[(field.value || 1) - 1] || "初心者"}</span>
               </div>
             </FormControl>
             <FormMessage />
