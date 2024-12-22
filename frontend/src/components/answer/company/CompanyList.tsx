@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import {
   Pagination,
   PaginationContent,
@@ -110,8 +112,12 @@ const CompanyList = (props: props) => {
         <TableBody>
           {currentData.map((company) => (
             <TableRow key={company.id} className="hover:bg-gray-100">
-              <TableCell>{company.id}</TableCell>
-              <TableCell>{company.name}</TableCell>
+              <TableCell>
+                <Link href={`./company/${company.id}`}>{company.id}</Link>
+              </TableCell>
+              <TableCell>
+                <Link href={`./company/${company.id}`}>{company.name}</Link>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
