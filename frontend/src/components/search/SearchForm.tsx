@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
 
 const languages = ["未選択", "JavaScript", "Python", "Java", "C++", "Ruby"];
+const levels = ["未選択", "初学者", "初級", "中級", "上級", "プロ"];
 const ratings = ["未選択", "1", "2", "3", "4", "5"];
 
 interface SearchFormProps {
@@ -50,7 +51,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
                 <Select onValueChange={(value) => setProficiency(value)}>
                     <SelectTrigger>{proficiency || "未選択"}</SelectTrigger>
                     <SelectContent>
-                        {ratings.map((option, index) => (
+                        {levels.map((option, index) => (
                             <SelectItem key={index} value={option}>
                                 {option}
                             </SelectItem>

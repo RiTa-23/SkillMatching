@@ -13,6 +13,7 @@ interface Resource {
 }
 
 const languages = ["JavaScript", "Python", "Java", "C++", "Ruby"];
+const levels = ["初学者", "初級", "中級", "上級", "プロ"];
 const ratings = ["1", "2", "3", "4", "5"];
 
 // モックデータをランダムに生成する関数
@@ -21,7 +22,7 @@ const generateMockData = (count: number): Resource[] => {
     id: index + 1,
     name: `エンジニア ${index + 1}`,
     language: languages[Math.floor(Math.random() * languages.length)],
-    proficiency: ratings[Math.floor(Math.random() * ratings.length)],
+    proficiency: levels[Math.floor(Math.random() * levels.length)],
     communication: ratings[Math.floor(Math.random() * ratings.length)],
     problemSolving: ratings[Math.floor(Math.random() * ratings.length)],
   }));
