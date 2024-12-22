@@ -14,6 +14,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import MySkill from "@/components/answer/myInfo/MySkill";
+
 const AnswererDetailPage = () => {
   const dummyData = {
     name: "エノッキー",
@@ -31,53 +33,7 @@ const AnswererDetailPage = () => {
 
   return (
     <div className="flex flex-col justify-center items-center h-[90vh] space-y-4">
-      <Card className="w-[80%] max-w-[800px] p-2">
-        <CardHeader>
-          <CardTitle>マイスキル</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableBody>
-              <TableRow>
-                <TableCell>氏名</TableCell>
-                <TableCell className="text-xl">{dummyData.name}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>生年月日</TableCell>
-                <TableCell className="text-xl">{dummyData.birthday}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>メールアドレス</TableCell>
-                <TableCell className="text-xl">{dummyData.email}</TableCell>
-              </TableRow>
-              <TableRow></TableRow>
-            </TableBody>
-          </Table>
-          <div className="p-4">
-            <p>使用可能言語</p>
-            <div className="space-x-2 mt-4">
-              {dummyData.languages.map((language) => (
-                <HoverCard key={language.id}>
-                  <HoverCardTrigger>
-                    <Badge variant="outline" className="text-lg py-1 px-4 mb-4">
-                      {language.name}
-                    </Badge>
-                  </HoverCardTrigger>
-                  <HoverCardContent>
-                    <div>
-                      {language.level === 1 && "初心者"}
-                      {language.level === 2 && "初級"}
-                      {language.level === 3 && "中級"}
-                      {language.level === 4 && "上級"}
-                      {language.level === 5 && "プロ"}
-                    </div>
-                  </HoverCardContent>
-                </HoverCard>
-              ))}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <MySkill />
       <Card className="w-[80%] max-w-[800px] p-2">
         <CardContent>
           <CardHeader>
