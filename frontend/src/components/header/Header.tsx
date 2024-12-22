@@ -6,12 +6,14 @@ import { useParams } from "next/navigation";
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuList
+  NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 
-import { answererUrls } from "@/components/header/urls";
+interface HeaderProps {
+  urls: { name: string; url: string }[];
+}
 
-const Header = () => {
+const Header = ({ urls }: HeaderProps) => {
   const { id } = useParams();
 
   return (
@@ -21,7 +23,7 @@ const Header = () => {
       </h1>
       <NavigationMenu>
         <NavigationMenuList className="space-x-10 text-white text-lg mr-6">
-          {answererUrls.map((url) => (
+          {urls.map((url) => (
             <NavigationMenuItem key={url.url} className="hover:text-accent-500">
               <Link href={`/${id}/${url.url}`} passHref>
                 {url.name}

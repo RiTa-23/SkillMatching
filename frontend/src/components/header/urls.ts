@@ -1,4 +1,4 @@
-export const answererUrls = [
+export const answererUrls: { name: string; url: string }[] = [
   {
     name: "企業一覧",
     url: "/company",
