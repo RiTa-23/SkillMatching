@@ -45,7 +45,7 @@ const ComboboxDemo = () => {
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove,  } = useFieldArray({
     control: form.control,
     name: "languages",
   });

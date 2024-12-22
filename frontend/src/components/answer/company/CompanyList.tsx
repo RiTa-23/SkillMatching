@@ -3,7 +3,6 @@
 import {
   Pagination,
   PaginationContent,
-  // PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -101,7 +100,7 @@ const CompanyList = (props: props) => {
 
   return (
     <>
-      <Table className="">
+      <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">No.</TableHead>
@@ -111,8 +110,8 @@ const CompanyList = (props: props) => {
         <TableBody>
           {currentData.map((company) => (
             <TableRow key={company.id} className="hover:bg-gray-100">
-              <TableCell className="">{company.id}</TableCell>
-              <TableCell className="">{company.name}</TableCell>
+              <TableCell>{company.id}</TableCell>
+              <TableCell>{company.name}</TableCell>
             </TableRow>
           ))}
         </TableBody>
