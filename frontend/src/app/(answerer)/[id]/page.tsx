@@ -1,11 +1,18 @@
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const AnswererDetailPage = () => {
   const dummyData = {
@@ -23,8 +30,11 @@ const AnswererDetailPage = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center h-[90vh]">
-      <Card className="w-[80%] max-w-[800px] p-8 mt-10">
+    <div className="flex flex-col justify-center items-center h-[90vh] space-y-4">
+      <Card className="w-[80%] max-w-[800px] p-2">
+        <CardHeader>
+          <CardTitle>マイスキル</CardTitle>
+        </CardHeader>
         <CardContent>
           <Table>
             <TableBody>
@@ -66,6 +76,41 @@ const AnswererDetailPage = () => {
               ))}
             </div>
           </div>
+        </CardContent>
+      </Card>
+      <Card className="w-[80%] max-w-[800px] p-2">
+        <CardContent>
+          <CardHeader>
+            <CardTitle>回答履歴</CardTitle>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>会社名</TableHead>
+                    <TableHead>回答日</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>株式会社未来技術</TableCell>
+                    <TableCell>2021/12/22</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>グローバルソリューションズ株式会社</TableCell>
+                    <TableCell>2021/12/22</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>クリエイティブマインズ合同会社</TableCell>
+                    <TableCell>2021/12/22</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>ネクストジェンエンタープライズ</TableCell>
+                    <TableCell>2021/12/22</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </CardContent>
+          </CardHeader>
         </CardContent>
       </Card>
     </div>
