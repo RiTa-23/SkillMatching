@@ -11,7 +11,7 @@ const CompanyPage = () => {
 
   return (
     <div className="flex flex-col items-center h-[90vh]">
-      <Card className="w-[80%] max-w-[700px] p-8 mt-10">
+      <Card className="w-[80%] max-w-[800px] p-8 mt-10">
         <CardContent className="pb-0">
           <Input
             type="text"

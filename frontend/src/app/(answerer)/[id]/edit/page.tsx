@@ -56,7 +56,7 @@ const ComboboxDemo = () => {
 
   return (
     <div className="flex flex-col items-center h-[90vh]">
-      <Card className="w-[80%] max-w-[700px] p-8 mt-20">
+      <Card className="w-[80%] max-w-[800px] p-8 mt-20">
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
