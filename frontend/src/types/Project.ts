@@ -6,6 +6,6 @@ export interface Project {
   startDate: string;
   endDate: string;
   status: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
