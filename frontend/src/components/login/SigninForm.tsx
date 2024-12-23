@@ -27,7 +27,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const SigninSchema = z.object({
-  id: z.string().min(1, "IDを入力してください"),
+  user_id: z.string().min(1, "IDを入力してください"),
   password: z.string().min(1, "Passwordを入力してください"),
 });
 
@@ -37,7 +37,7 @@ const SigninForm = () => {
   const form = useForm<SigninFormValues>({
     resolver: zodResolver(SigninSchema),
     defaultValues: {
-      id: "",
+      user_id: "",
       password: "",
     },
   });
@@ -75,12 +75,12 @@ const SigninForm = () => {
               >
                 <FormField
                   control={form.control}
-                  name="id"
+                  name="user_id"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>ID</FormLabel>
                       <FormControl>
-                        <Input placeholder="id" {...field} />
+                        <Input placeholder="user_id" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -125,12 +125,12 @@ const SigninForm = () => {
               >
                 <FormField
                   control={form.control}
-                  name="id"
+                  name="user_id"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>ID</FormLabel>
                       <FormControl>
-                        <Input placeholder="id" {...field} />
+                        <Input placeholder="user_id" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
