@@ -1,22 +1,13 @@
-"use client";
-
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 
+import ProjectDetail from "@/components/answer/project/ProjectDetail";
 import type { Project } from "@/types/Project";
 
 const ProjectList = () => {
@@ -77,30 +68,7 @@ const ProjectList = () => {
             </TableHeader>
             <TableBody>
               {dummyProjects.map((project) => (
-                <Dialog key={project.id}>
-                  <TableRow key={project.id} className="hover:bg-gray-100">
-                    <TableCell>
-                      <DialogTrigger>{project.id}</DialogTrigger>
-                    </TableCell>
-                    <TableCell>
-                      <DialogTrigger>{project.name}</DialogTrigger>
-                    </TableCell>
-                    <TableCell>
-                      <DialogTrigger>{project.status}</DialogTrigger>
-                    </TableCell>
-                  </TableRow>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>{project.name}</DialogTitle>
-                      <div>
-                        <p>開始日: {project.startDate}</p>
-                        <p>終了日: {project.endDate}</p>
-                        <p>ステータス: {project.status}</p>
-                        <p>説明: {project.description}</p>
-                      </div>
-                    </DialogHeader>
-                  </DialogContent>
-                </Dialog>
+                <ProjectDetail key={project.id} project={project} />
               ))}
             </TableBody>
           </Table>
