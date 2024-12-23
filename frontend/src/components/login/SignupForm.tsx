@@ -5,6 +5,7 @@ import Link from "next/link";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 import {
   Form,
@@ -40,8 +41,13 @@ const SignupForm = () => {
     },
   });
 
-  const onSubmit = (values: SignupFormValues) => {
-    console.log(values);
+  const onSubmit = async (values: SignupFormValues) => {
+    try {
+      const response = await axios.post("http://localhost:8080/api/register", values);
+      console.log("User registered successfully:", response.data);
+    } catch (error) {
+      console.error("Registration failed:", error);
+    }
   };
 
   return (

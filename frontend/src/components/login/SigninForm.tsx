@@ -5,6 +5,7 @@ import Link from "next/link";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 import {
   Form,
@@ -41,8 +42,14 @@ const SigninForm = () => {
     },
   });
 
-  const signinAsPersonal = (values: SigninFormValues) => {
-    console.log("Signin as personal: ", values);
+  const signinAsPersonal = async (values: SigninFormValues) => {
+    try {
+      const response = await axios.post("http://localhost:8080/api/login", values);
+      console.log("Login successful:", response.data);
+      localStorage.setItem("authToken", response.data.token);
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
 
   const signinAsCompany = (values: SigninFormValues) => {
