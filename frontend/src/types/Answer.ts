@@ -5,6 +5,6 @@ export interface Answer {
   answer: string;
   responseValue: number;
   description: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
