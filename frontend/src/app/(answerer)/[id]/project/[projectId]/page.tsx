@@ -1,9 +1,11 @@
-const ProjectEvaluation = () => {
+import ProjectEvaluation from "@/components/answer/project/ProjectEvaluation";
+
+const ProjectEvaluationPage = () => {
   return (
-    <div>
-      <h1>Project Evaluation</h1>
+    <div className="flex flex-col items-center h-[90vh]">
+      <ProjectEvaluation />
     </div>
   );
 };
 
-export default ProjectEvaluation;
+export default ProjectEvaluationPage;

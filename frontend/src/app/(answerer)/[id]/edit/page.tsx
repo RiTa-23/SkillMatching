@@ -34,7 +34,7 @@ const SkillsSchema = z.object({
 
 export type SkillsFormValues = z.infer<typeof SkillsSchema>;
 
-const ComboboxDemo = () => {
+const MySkillEditPage = () => {
   const form = useForm<SkillsFormValues>({
     resolver: zodResolver(SkillsSchema),
     defaultValues: {
@@ -138,4 +138,4 @@ const ComboboxDemo = () => {
   );
 };
 
-export default ComboboxDemo;
+export default MySkillEditPage;
