@@ -47,13 +47,31 @@ const SigninForm = () => {
       const response = await axios.post("http://localhost:8080/api/login", values);
       console.log("Login successful:", response.data);
       localStorage.setItem("authToken", response.data.token);
-    } catch (error) {
-      console.error("Login failed:", error);
+    } catch (error: any) {
+      if (error.response) {
+        console.error("Validation errors:", error.response.data.errors);
+        alert(`エラー: ${JSON.stringify(error.response.data.errors)}`);
+      } else {
+        console.error("Unexpected error:", error);
+        alert("予期しないエラーが発生しました");
+      }
     }
   };
 
-  const signinAsCompany = (values: SigninFormValues) => {
-    console.log("Signin as company: ", values);
+  const signinAsCompany = async (values: SigninFormValues) => {
+    try {
+      const response = await axios.post("http://localhost:8080/api/login", values);
+      console.log("Login successful:", response.data);
+      localStorage.setItem("authToken", response.data.token);
+    } catch (error: any) {
+      if (error.response) {
+        console.error("Validation errors:", error.response.data.errors);
+        alert(`エラー: ${JSON.stringify(error.response.data.errors)}`);
+      } else {
+        console.error("Unexpected error:", error);
+        alert("予期しないエラーが発生しました");
+      }
+    }
   };
 
   return (
