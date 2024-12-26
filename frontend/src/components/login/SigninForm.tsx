@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 import {
   Form,
@@ -44,11 +45,14 @@ const SigninForm = () => {
 
   const signinAsPersonal = async (values: SigninFormValues) => {
     try {
-      const response = await axios.post("http://localhost:8080/api/login", values);
+      const response = await axios.post(
+        "http://localhost:8080/api/login",
+        values
+      );
+      Cookies.set('token', response.data.token);
       console.log("Login successful:", response.data);
-      localStorage.setItem("authToken", response.data.token);
-    } catch (error: any) {
-      if (error.response) {
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
         console.error("Validation errors:", error.response.data.errors);
         alert(`エラー: ${JSON.stringify(error.response.data.errors)}`);
       } else {
@@ -60,11 +64,14 @@ const SigninForm = () => {
 
   const signinAsCompany = async (values: SigninFormValues) => {
     try {
-      const response = await axios.post("http://localhost:8080/api/login", values);
+      const response = await axios.post(
+        "http://localhost:8080/api/login",
+        values
+      );
       console.log("Login successful:", response.data);
       localStorage.setItem("authToken", response.data.token);
-    } catch (error: any) {
-      if (error.response) {
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
         console.error("Validation errors:", error.response.data.errors);
         alert(`エラー: ${JSON.stringify(error.response.data.errors)}`);
       } else {

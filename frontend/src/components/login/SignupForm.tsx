@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 import {
   Form,
@@ -43,14 +44,36 @@ const SignupForm = () => {
 
   const onSubmit = async (values: SignupFormValues) => {
     try {
-      const response = await axios.post("http://localhost:8080/api/register", values);
+      const response = await axios.post(
+        "http://localhost:8080/api/register",
+        values
+      );
       console.log("User registered successfully:", response.data);
-    } catch (error: any) {
-      if (error.response) {
+      alert("ユーザー登録が完了しました");
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
         console.error("Validation errors:", error.response.data.errors);
       } else {
         console.error("Unexpected error:", error);
       }
+    }
+  };
+
+  const logout = async () => {
+    try {
+      const token = Cookies.get("token");
+      console.log("Token:", token);
+      const response = await axios.post("http://localhost:8080/api/user/logout", {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
+      console.log("Logout successful:", response.data);
+      Cookies.remove("token");
+    } catch (error) {
+      console.error("Unexpected error:", error);
+      alert("予期しないエラーが発生しました");
     }
   };
 
@@ -99,6 +122,7 @@ const SignupForm = () => {
           ログインはこちら
         </Link>
       </CardFooter>
+      <Button onClick={logout}>ログアウト</Button>
     </Card>
   );
 };
