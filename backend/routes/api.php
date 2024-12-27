@@ -15,15 +15,8 @@ Route::get('/test', function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::prefix('user')
-    ->name('user.')
-    ->controller(AuthController::class)
+Route::middleware(['auth:sanctum'])
     ->group(function () {
-        Route::post('/register', 'register')->name('register');
-        Route::post('/login', 'login')->name('login');
-        Route::middleware(['auth:sanctum'])
-            ->group(function () {
-                Route::get('/', 'getUser')->name('getUser');
-                Route::post('/logout', 'logout')->name('logout');
-            });
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::get('/user', [AuthController::class, 'getUser']);
     });
