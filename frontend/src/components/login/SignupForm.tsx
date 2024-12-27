@@ -63,7 +63,7 @@ const SignupForm = () => {
     try {
       const token = Cookies.get("token");
       console.log("Token:", token);
-      const response = await axios.post("http://localhost:8080/api/user/logout", {}, {
+      const response = await axios.post("http://localhost:8080/api/logout", {}, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
