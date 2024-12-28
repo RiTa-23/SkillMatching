@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import SearchForm from "@/components/search/SearchForm";
+import Link from 'next/link';
 
 interface Resource {
   id: number;
@@ -72,10 +73,12 @@ const ResourcesSearch: React.FC = () => {
       <SearchForm onSearch={handleSearch} />
       <div className="mt-6">
         {paginatedData.map((resource) => (
-          <div key={resource.id} className="p-2 border-b">
-            {resource.name} - {resource.language} - 熟練度: {resource.proficiency} -
-            コミュニケーション: {resource.communication} - 問題解決: {resource.problemSolving}
-          </div>
+          <Link key={resource.id} href={`/company/resources/${resource.id}`}>
+            <div className="p-2 border-b cursor-pointer">
+              {resource.name} - {resource.language} - 熟練度: {resource.proficiency} -
+              コミュニケーション: {resource.communication} - 問題解決: {resource.problemSolving}
+            </div>
+          </Link>
         ))}
       </div>
       <div className="flex justify-between items-center mt-4">
