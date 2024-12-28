@@ -1,0 +1,15 @@
+{
+    "name": "rita/skill-matching",
+    "autoload": {
+        "psr-4": {
+            "Rita\\SkillMatching\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "RiTa-23",
+            "email": "rita.tifrt@gmail.com"
+        }
+    ],
+    "require": {}
+}
