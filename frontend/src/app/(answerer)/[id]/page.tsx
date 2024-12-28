@@ -1,7 +1,11 @@
+import AnswerHistory from "@/components/answer/myInfo/AnswerHistory";
+import MySkill from "@/components/answer/myInfo/MySkill";
+
 const AnswererDetailPage = () => {
   return (
-    <div>
-      <h1>個人情報</h1>
+    <div className="flex flex-col justify-center items-center h-[90vh] space-y-4">
+      <MySkill />
+      <AnswerHistory />
     </div>
   );
 };

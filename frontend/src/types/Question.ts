@@ -1,8 +1,8 @@
 export interface Question {
   id: number;
-  categoryId: number;
-  languageId: number;
+  category?: string;
+  language?: string;
   question: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }

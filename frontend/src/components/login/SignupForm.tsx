@@ -5,6 +5,7 @@ import Link from "next/link";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 import {
   Form,
@@ -25,7 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 const SignupSchema = z.object({
-  id: z.string().min(1, "IDを入力してください"),
+  user_id: z.string().min(1, "IDを入力してください"),
   password: z.string().min(1, "パスワードを入力してください"),
 });
 
@@ -35,13 +36,22 @@ const SignupForm = () => {
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(SignupSchema),
     defaultValues: {
-      id: "",
+      user_id: "",
       password: "",
     },
   });
 
-  const onSubmit = (values: SignupFormValues) => {
-    console.log(values);
+  const onSubmit = async (values: SignupFormValues) => {
+    try {
+      const response = await axios.post("http://localhost:8080/api/register", values);
+      console.log("User registered successfully:", response.data);
+    } catch (error: any) {
+      if (error.response) {
+        console.error("Validation errors:", error.response.data.errors);
+      } else {
+        console.error("Unexpected error:", error);
+      }
+    }
   };
 
   return (
@@ -54,7 +64,7 @@ const SignupForm = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name="id"
+              name="user_id"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>ID</FormLabel>

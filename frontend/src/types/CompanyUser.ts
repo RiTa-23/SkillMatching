@@ -6,6 +6,6 @@ export interface CompanyUser {
   birthday: string;
   email: string;
   roleId: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }

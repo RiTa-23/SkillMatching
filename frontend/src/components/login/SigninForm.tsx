@@ -5,6 +5,7 @@ import Link from "next/link";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 import {
   Form,
@@ -26,7 +27,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const SigninSchema = z.object({
-  id: z.string().min(1, "IDを入力してください"),
+  user_id: z.string().min(1, "IDを入力してください"),
   password: z.string().min(1, "Passwordを入力してください"),
 });
 
@@ -36,17 +37,41 @@ const SigninForm = () => {
   const form = useForm<SigninFormValues>({
     resolver: zodResolver(SigninSchema),
     defaultValues: {
-      id: "",
+      user_id: "",
       password: "",
     },
   });
 
-  const signinAsPersonal = (values: SigninFormValues) => {
-    console.log("Signin as personal: ", values);
+  const signinAsPersonal = async (values: SigninFormValues) => {
+    try {
+      const response = await axios.post("http://localhost:8080/api/login", values);
+      console.log("Login successful:", response.data);
+      localStorage.setItem("authToken", response.data.token);
+    } catch (error: any) {
+      if (error.response) {
+        console.error("Validation errors:", error.response.data.errors);
+        alert(`エラー: ${JSON.stringify(error.response.data.errors)}`);
+      } else {
+        console.error("Unexpected error:", error);
+        alert("予期しないエラーが発生しました");
+      }
+    }
   };
 
-  const signinAsCompany = (values: SigninFormValues) => {
-    console.log("Signin as company: ", values);
+  const signinAsCompany = async (values: SigninFormValues) => {
+    try {
+      const response = await axios.post("http://localhost:8080/api/login", values);
+      console.log("Login successful:", response.data);
+      localStorage.setItem("authToken", response.data.token);
+    } catch (error: any) {
+      if (error.response) {
+        console.error("Validation errors:", error.response.data.errors);
+        alert(`エラー: ${JSON.stringify(error.response.data.errors)}`);
+      } else {
+        console.error("Unexpected error:", error);
+        alert("予期しないエラーが発生しました");
+      }
+    }
   };
 
   return (
@@ -68,12 +93,12 @@ const SigninForm = () => {
               >
                 <FormField
                   control={form.control}
-                  name="id"
+                  name="user_id"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>ID</FormLabel>
                       <FormControl>
-                        <Input placeholder="id" {...field} />
+                        <Input placeholder="user_id" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -118,12 +143,12 @@ const SigninForm = () => {
               >
                 <FormField
                   control={form.control}
-                  name="id"
+                  name="user_id"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>ID</FormLabel>
                       <FormControl>
-                        <Input placeholder="id" {...field} />
+                        <Input placeholder="user_id" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
