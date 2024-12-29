@@ -13,6 +13,9 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
     use HasApiTokens, Notifiable;
 
+    protected $primaryKey = 'user_id'; // 主キーを指定
+
+
     /**
      * The attributes that are mass assignable.
      *
