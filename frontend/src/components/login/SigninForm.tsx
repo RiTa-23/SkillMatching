@@ -5,7 +5,6 @@ import Link from "next/link";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import Cookies from "js-cookie";
 
 import {
@@ -30,7 +29,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import fetcher from "@/lib/fetcher";
 
 const SigninSchema = z.object({
-  user_id: z.string().min(1, "IDを入力してください"),
+  email: z
+    .string()
+    .min(1, "メールアドレスを入力してください")
+    .email("正しいメールアドレスを入力してください"),
   password: z.string().min(1, "Passwordを入力してください"),
 });
 
@@ -40,7 +42,7 @@ const SigninForm = () => {
   const form = useForm<SigninFormValues>({
     resolver: zodResolver(SigninSchema),
     defaultValues: {
-      user_id: "",
+      email: "",
       password: "",
     },
   });
@@ -94,12 +96,12 @@ const SigninForm = () => {
               >
                 <FormField
                   control={form.control}
-                  name="user_id"
+                  name="email"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>ID</FormLabel>
                       <FormControl>
-                        <Input placeholder="user_id" {...field} />
+                        <Input type="email" placeholder="email" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -110,9 +112,13 @@ const SigninForm = () => {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
+                      <FormLabel>パスワード</FormLabel>
                       <FormControl>
-                        <Input placeholder="password" {...field} />
+                        <Input
+                          type="password"
+                          placeholder="password"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -144,12 +150,12 @@ const SigninForm = () => {
               >
                 <FormField
                   control={form.control}
-                  name="user_id"
+                  name="email"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>ID</FormLabel>
                       <FormControl>
-                        <Input placeholder="user_id" {...field} />
+                        <Input placeholder="email" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

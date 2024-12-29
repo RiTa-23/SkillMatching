@@ -15,9 +15,9 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $user = User::create([
-            'user_id' => $request->user_id,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role_id' => $request->role_id,
         ]);
         $json = [
             'data' => $user
@@ -29,20 +29,24 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'user_id' => ['required'],
+            'email' => ['required'],
             'password' => ['required'],
         ]);
 
         if (Auth::attempt($credentials)) {
-            $user = User::where('user_id', $request->user_id)->first();
+            $user = User::where('email', $request->email)->first();
+            logger('User fetched: ', ['user' => $user]);
+            logger('Auth user: ', ['auth_user' => Auth::user()]);
+
             $user->tokens()->delete();  // 古いトークンを削除
 
             // トークンの生成
             $tokenResult = $user->createToken('token');
+            logger('Token created: ', ['token' => $tokenResult]);
             $token = $tokenResult->plainTextToken;
 
             // トークンの有効期限を設定
-            $tokenResult->accessToken->expires_at = Carbon::now()->addSeconds(60); // 例: 60分
+            $tokenResult->accessToken->expires_at = Carbon::now()->addMinutes(60);
             $tokenResult->accessToken->save();
 
             return response()->json(['token' => $token], Response::HTTP_OK);

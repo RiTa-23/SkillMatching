@@ -16,9 +16,9 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id('user_id'); // 主キー
             $table->string('password'); // パスワード
-            $table->string('name'); // 氏名
-            $table->integer('age')->nullable(); // 年齢 (NULL許可)
-            $table->string('email')->unique(); // メールアドレス (ユニーク制約)
+            $table->string('name')->nullable(); // 氏名
+            $table->date('birthday')->nullable(); // 誕生日
+            $table->string('email')->unique()->nullable(); // メールアドレス (ユニーク制約)
             $table->unsignedBigInteger('role_id'); // 役割ID (外部キー)
             $table->timestamps(); // created_at と updated_at を自動生成
 

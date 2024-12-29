@@ -17,7 +17,7 @@ class UsersTableSeeder extends Seeder
             DB::table('users')->insert([
                 'password' => bcrypt('password'), // パスワード (bcryptでハッシュ化)
                 'name' => $faker->name, // ダミーの氏名
-                'age' => rand(18, 60), // 年齢 (18から60の間)
+                'birthday' => $faker->date, // ダミーの誕生日
                 'email' => $faker->unique()->safeEmail, // ユニークなメールアドレス
                 'role_id' => rand(1, 4), // ランダムな役割ID (1から4の間)
                 'created_at' => now(),

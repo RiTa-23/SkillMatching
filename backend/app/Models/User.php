@@ -6,11 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Role;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
     use HasApiTokens, Notifiable;
+
+    protected $primaryKey = 'user_id'; // 主キーを指定
+
 
     /**
      * The attributes that are mass assignable.
@@ -18,8 +22,12 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'user_id', // ユーザーIDフィールド
+        'user_id',
         'password',
+        'name',
+        'birthday',
+        'email',
+        'role_id',
     ];
 
     /**
@@ -52,5 +60,10 @@ class User extends Authenticatable
     public function username(): string
     {
         return 'user_id'; // 認証時に使用するフィールドを指定
+    }
+
+    public function roles()
+    {
+        return $this->belongsTo(Role::class);
     }
 }
