@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Role;
 
 class User extends Authenticatable
 {
@@ -52,5 +53,10 @@ class User extends Authenticatable
     public function username(): string
     {
         return 'user_id'; // 認証時に使用するフィールドを指定
+    }
+
+    public function roles()
+    {
+        return $this->belongsTo(Role::class);
     }
 }
