@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 import {
   Form,
@@ -26,6 +27,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import fetcher from "@/lib/fetcher";
+
 const SigninSchema = z.object({
   user_id: z.string().min(1, "IDを入力してください"),
   password: z.string().min(1, "Passwordを入力してください"),
@@ -43,34 +46,32 @@ const SigninForm = () => {
   });
 
   const signinAsPersonal = async (values: SigninFormValues) => {
-    try {
-      const response = await axios.post("http://localhost:8080/api/login", values);
-      console.log("Login successful:", response.data);
-      localStorage.setItem("authToken", response.data.token);
-    } catch (error: any) {
-      if (error.response) {
-        console.error("Validation errors:", error.response.data.errors);
-        alert(`エラー: ${JSON.stringify(error.response.data.errors)}`);
-      } else {
-        console.error("Unexpected error:", error);
-        alert("予期しないエラーが発生しました");
-      }
+    const { data, error } = await fetcher({
+      url: "login",
+      method: "POST",
+      body: values,
+    });
+    if (data) {
+      Cookies.set("token", (data as { token: string }).token);
+      console.log("Login successful:", data);
+    }
+    if (error) {
+      console.error("Validation errors:", error);
     }
   };
 
   const signinAsCompany = async (values: SigninFormValues) => {
-    try {
-      const response = await axios.post("http://localhost:8080/api/login", values);
-      console.log("Login successful:", response.data);
-      localStorage.setItem("authToken", response.data.token);
-    } catch (error: any) {
-      if (error.response) {
-        console.error("Validation errors:", error.response.data.errors);
-        alert(`エラー: ${JSON.stringify(error.response.data.errors)}`);
-      } else {
-        console.error("Unexpected error:", error);
-        alert("予期しないエラーが発生しました");
-      }
+    const { data, error } = await fetcher({
+      url: "login",
+      method: "POST",
+      body: values,
+    });
+    if (data) {
+      Cookies.set("token", (data as { token: string }).token);
+      console.log("Login successful:", data);
+    }
+    if (error) {
+      console.error("Validation errors:", error);
     }
   };
 
