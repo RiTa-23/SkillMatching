@@ -28,8 +28,12 @@ import { Input } from "@/components/ui/input";
 import fetcher from "@/lib/fetcher";
 
 const SignupSchema = z.object({
-  user_id: z.string().min(1, "IDを入力してください"),
+  email: z
+    .string()
+    .min(1, "メールアドレスを入力してください")
+    .email("正しいメールアドレスを入力してください"),
   password: z.string().min(1, "パスワードを入力してください"),
+  role_id: z.number().int(),
 });
 
 type SignupFormValues = z.infer<typeof SignupSchema>;
@@ -38,8 +42,9 @@ const SignupForm = () => {
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(SignupSchema),
     defaultValues: {
-      user_id: "",
+      email: "",
       password: "",
+      role_id: 4, // デフォルトはguest
     },
   });
 
@@ -85,12 +90,12 @@ const SignupForm = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name="user_id"
+              name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>ID</FormLabel>
+                  <FormLabel>メールアドレス</FormLabel>
                   <FormControl>
-                    <Input placeholder="id" {...field} />
+                    <Input type="email" placeholder="email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -103,7 +108,7 @@ const SignupForm = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="password" {...field} />
+                    <Input type="password" placeholder="password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
