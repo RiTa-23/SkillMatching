@@ -69,6 +69,6 @@ class User extends Authenticatable
 
     public function master()
     {
-        return $this->belongsToMany(Language::class)->withTimestamps();
+        return $this->belongsToMany(Language::class)->withPivot('level')->withTimestamps();
     }
 }

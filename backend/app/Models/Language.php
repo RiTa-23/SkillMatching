@@ -13,12 +13,11 @@ class Language extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'language_id', // 言語IDフィールド
-        'name', // 言語名フィールド
+        'language_name', // 言語名フィールド
     ];
 
     public function mastered()
     {
-        return $this->hasMany(User::class)->withTimestamps();
+        return $this->hasMany(User::class)->withPivot('level')->withTimestamps();
     }
 }
