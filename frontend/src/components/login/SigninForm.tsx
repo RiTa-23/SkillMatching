@@ -60,7 +60,7 @@ const SigninForm = () => {
     if (data) {
       Cookies.set("token", (data as { token: string }).token);
       console.log("Login successful:", data);
-      router.push(`/${(data as { user_id: string }).user_id}/edit`);
+      router.push(`/answerer`);
     }
     if (error) {
       console.error("Validation errors:", error);
@@ -104,7 +104,7 @@ const SigninForm = () => {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>ID</FormLabel>
+                      <FormLabel>メールアドレス</FormLabel>
                       <FormControl>
                         <Input type="email" placeholder="email" {...field} />
                       </FormControl>
@@ -158,7 +158,7 @@ const SigninForm = () => {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>ID</FormLabel>
+                      <FormLabel>メールアドレス</FormLabel>
                       <FormControl>
                         <Input placeholder="email" {...field} />
                       </FormControl>

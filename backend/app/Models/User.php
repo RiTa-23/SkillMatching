@@ -2,16 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Role;
+use App\Models\Language;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
-    use HasApiTokens, Notifiable;
+    use Notifiable;
+    use HasApiTokens;
 
     protected $primaryKey = 'user_id'; // 主キーを指定
 

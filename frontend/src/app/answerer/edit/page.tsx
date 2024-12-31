@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -20,6 +22,10 @@ import { Input } from "@/components/ui/input";
 
 import LanguagesField from "@/components/answer/form/LanguageField";
 
+import Cookies from "js-cookie";
+import fetcher from "@/lib/fetcher";
+import type { User } from "@/types/user";
+
 const SkillsSchema = z.object({
   name: z.string().min(1, "Name is required"),
   birthday: z.string().min(1, "Birthday is required"),
@@ -35,6 +41,32 @@ const SkillsSchema = z.object({
 export type SkillsFormValues = z.infer<typeof SkillsSchema>;
 
 const MySkillEditPage = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = Cookies.get("token");
+      const { data, error } = await fetcher<User>({
+        url: "user",
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (data) {
+        form.reset({
+          name: data.name,
+          birthday: data.birthday,
+          email: data.email,
+          languages: [],
+        });
+      }
+      if (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const form = useForm<SkillsFormValues>({
     resolver: zodResolver(SkillsSchema),
     defaultValues: {
@@ -45,13 +77,27 @@ const MySkillEditPage = () => {
     },
   });
 
-  const { fields, append, remove,  } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "languages",
   });
 
-  const onSubmit = (values: SkillsFormValues) => {
-    console.log("Skills: ", values);
+  const onSubmit = async (values: SkillsFormValues) => {
+    const token = Cookies.get("token");
+    const { data, error } = await fetcher<User>({
+      url: "user",
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: values,
+    });
+    if (data) {
+      console.log("Update successful:", data);
+    }
+    if (error) {
+      console.error("Validation errors:", error);
+    }
   };
 
   return (
@@ -126,7 +172,10 @@ const MySkillEditPage = () => {
                 )}
               />
               <div className="flex justify-center">
-                <Button type="submit" className="w-[60%] max-w-[100px] text-xl py-6 mt-4">
+                <Button
+                  type="submit"
+                  className="w-[60%] max-w-[100px] text-xl py-6 mt-4"
+                >
                   登録
                 </Button>
               </div>
