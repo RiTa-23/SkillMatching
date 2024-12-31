@@ -26,7 +26,7 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Check, ChevronsUpDown, Trash2 } from "lucide-react";
 
-import type { SkillsFormValues } from "@/app/(answerer)/[id]/edit/page";
+import type { SkillsFormValues } from "@/app/answerer/edit/page";
 
 type LanguagesFieldProps = {
   form: UseFormReturn<SkillsFormValues>;
@@ -140,7 +140,9 @@ const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
                     form.setValue(`languages.${index}.level`, value[0])
                   }
                 />
-                <span className="w-1/4 pl-4">{levelLabels[(field.value || 1) - 1] || "初心者"}</span>
+                <span className="w-1/4 pl-4">
+                  {levelLabels[(field.value || 1) - 1] || "初心者"}
+                </span>
               </div>
             </FormControl>
             <FormMessage />

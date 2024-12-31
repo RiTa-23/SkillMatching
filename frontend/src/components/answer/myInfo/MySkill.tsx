@@ -23,6 +23,7 @@ const MySkill = () => {
     email: "",
     role_id: 0,
   });
+
   useEffect(() => {
     const fetchData = async () => {
       const token = Cookies.get("token");
