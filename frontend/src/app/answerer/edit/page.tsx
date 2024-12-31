@@ -41,7 +41,6 @@ const SkillsSchema = z.object({
 export type SkillsFormValues = z.infer<typeof SkillsSchema>;
 
 const MySkillEditPage = () => {
-
   useEffect(() => {
     const fetchData = async () => {
       const token = Cookies.get("token");
@@ -83,8 +82,22 @@ const MySkillEditPage = () => {
     name: "languages",
   });
 
-  const onSubmit = (values: SkillsFormValues) => {
-    console.log("Skills: ", values);
+  const onSubmit = async (values: SkillsFormValues) => {
+    const token = Cookies.get("token");
+    const { data, error } = await fetcher<User>({
+      url: "user",
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: values,
+    });
+    if (data) {
+      console.log("Update successful:", data);
+    }
+    if (error) {
+      console.error("Validation errors:", error);
+    }
   };
 
   return (
