@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SkillController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -14,6 +15,7 @@ Route::get('/test', function () {
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/skill', [SkillController::class, 'store']);
 
 Route::middleware(['auth:sanctum'])
     ->group(function () {

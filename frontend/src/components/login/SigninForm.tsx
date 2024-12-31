@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 
+import { useRouter } from "next/navigation";
+
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -39,6 +41,8 @@ const SigninSchema = z.object({
 type SigninFormValues = z.infer<typeof SigninSchema>;
 
 const SigninForm = () => {
+  const router = useRouter();
+
   const form = useForm<SigninFormValues>({
     resolver: zodResolver(SigninSchema),
     defaultValues: {
@@ -56,6 +60,7 @@ const SigninForm = () => {
     if (data) {
       Cookies.set("token", (data as { token: string }).token);
       console.log("Login successful:", data);
+      router.push(`/${(data as { user_id: string }).user_id}/edit`);
     }
     if (error) {
       console.error("Validation errors:", error);
