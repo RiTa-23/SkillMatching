@@ -60,7 +60,7 @@ const SigninForm = () => {
     if (data) {
       Cookies.set("token", (data as { token: string }).token);
       console.log("Login successful:", data);
-      router.push(`/${(data as { user_id: string }).user_id}/edit`);
+      router.push(`/${(data as { user_id: string }).user_id}`);
     }
     if (error) {
       console.error("Validation errors:", error);
