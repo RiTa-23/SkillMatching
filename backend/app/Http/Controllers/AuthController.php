@@ -49,7 +49,7 @@ class AuthController extends Controller
             $tokenResult->accessToken->expires_at = Carbon::now()->addMinutes(60);
             $tokenResult->accessToken->save();
 
-            return response()->json(['token' => $token], Response::HTTP_OK);
+            return response()->json(['token' => $token, 'user_id' => Auth::id()], Response::HTTP_OK);
         }
 
         return response()->json('Can Not Login.', Response::HTTP_INTERNAL_SERVER_ERROR);
