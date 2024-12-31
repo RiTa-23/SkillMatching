@@ -16,7 +16,7 @@ import fetcher from "@/lib/fetcher";
 import type { User } from "@/types/user";
 
 const MySkill = () => {
-  const [data, setData] = useState<User>({
+  const [user, setUser] = useState<User>({
     user_id: 0,
     name: "",
     birthday: "",
@@ -27,7 +27,7 @@ const MySkill = () => {
   useEffect(() => {
     const fetchData = async () => {
       const token = Cookies.get("token");
-      const { data, error } = await fetcher({
+      const { data, error } = await fetcher<User>({
         url: "user",
         method: "GET",
         headers: {
@@ -35,8 +35,8 @@ const MySkill = () => {
         },
       });
       if (data) {
-        setData(data as User);
-        console.log(data);
+        setUser(data as User);
+        console.log(user);
       }
       if (error) {
         console.error(error);
@@ -46,6 +46,7 @@ const MySkill = () => {
     fetchData();
   }, []);
 
+  console.log('User:', user);
   const dummyLanguages = [
     { id: 1, name: "JavaScript", level: 5 },
     { id: 2, name: "TypeScript", level: 5 },
@@ -65,15 +66,15 @@ const MySkill = () => {
           <TableBody>
             <TableRow>
               <TableCell>氏名</TableCell>
-              <TableCell className="text-xl">{data.name}</TableCell>
+              <TableCell className="text-xl">{user.name}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>生年月日</TableCell>
-              <TableCell className="text-xl">{data.birthday}</TableCell>
+              <TableCell className="text-xl">{user.birthday}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>メールアドレス</TableCell>
-              <TableCell className="text-xl">{data.email}</TableCell>
+              <TableCell className="text-xl">{user.email}</TableCell>
             </TableRow>
             <TableRow></TableRow>
           </TableBody>
