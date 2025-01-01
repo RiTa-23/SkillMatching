@@ -16,8 +16,8 @@ class Language extends Model
         'language_name', // 言語名フィールド
     ];
 
-    public function mastered()
+    public function users()
     {
-        return $this->hasMany(User::class)->withPivot('level')->withTimestamps();
+        return $this->belongsToMany(User::class, 'user_language', 'language_id', 'user_id')->withPivot('level')->withTimestamps();
     }
 }

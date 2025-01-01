@@ -25,6 +25,7 @@ import LanguagesField from "@/components/answer/form/LanguageField";
 import Cookies from "js-cookie";
 import fetcher from "@/lib/fetcher";
 import type { User } from "@/types/user";
+import type { Skill } from "@/types/Skill";
 
 const SkillsSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -32,7 +33,7 @@ const SkillsSchema = z.object({
   email: z.string().email("Invalid email"),
   languages: z.array(
     z.object({
-      id: z.number(),
+      language_id: z.number(),
       level: z.number().min(1).max(5),
     })
   ),
@@ -41,32 +42,6 @@ const SkillsSchema = z.object({
 export type SkillsFormValues = z.infer<typeof SkillsSchema>;
 
 const MySkillEditPage = () => {
-  useEffect(() => {
-    const fetchData = async () => {
-      const token = Cookies.get("token");
-      const { data, error } = await fetcher<User>({
-        url: "user",
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (data) {
-        form.reset({
-          name: data.name,
-          birthday: data.birthday,
-          email: data.email,
-          languages: [],
-        });
-      }
-      if (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   const form = useForm<SkillsFormValues>({
     resolver: zodResolver(SkillsSchema),
     defaultValues: {
@@ -77,13 +52,59 @@ const MySkillEditPage = () => {
     },
   });
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = Cookies.get("token");
+      const { data: profileData, error: profileError } = await fetcher<User>({
+        url: "user",
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const { data: skillData, error: skillError } = await fetcher<Skill[]>({
+        url: "skill",
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (profileData && skillData) {
+        form.reset({
+          name: profileData.name,
+          birthday: profileData.birthday,
+          email: profileData.email,
+          languages: skillData.map((skill) => ({
+            language_id: skill.language_id,
+            level: skill.level,
+          })),
+        });
+      }
+      if (profileError) {
+        console.error(profileError);
+      }
+      if (skillError) {
+        console.error(skillError);
+      }
+    };
+
+    fetchData();
+  }, [form]);
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "languages",
   });
 
-  const onSubmit = async (values: SkillsFormValues) => {
-    const token = Cookies.get("token");
+  interface UpdateProfileParams {
+    token: string | undefined;
+    values: SkillsFormValues;
+  }
+
+  const updateProfile = async ({
+    token,
+    values,
+  }: UpdateProfileParams): Promise<void> => {
     const { data, error } = await fetcher<User>({
       url: "user",
       method: "PUT",
@@ -98,6 +119,34 @@ const MySkillEditPage = () => {
     if (error) {
       console.error("Validation errors:", error);
     }
+  };
+
+  const updateSkills = async ({
+    token,
+    values,
+  }: UpdateProfileParams): Promise<void> => {
+    values.languages.forEach(async (language) => {
+      const { data, error } = await fetcher<User>({
+        url: "skill",
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: language,
+      });
+      if (data) {
+        console.log("Update successful:", data);
+      }
+      if (error) {
+        console.error("Validation errors:", error);
+      }
+    });
+  };
+
+  const onSubmit = async (values: SkillsFormValues) => {
+    const token = Cookies.get("token");
+    updateProfile({ token, values });
+    updateSkills({ token, values });
   };
 
   return (
@@ -162,7 +211,10 @@ const MySkillEditPage = () => {
                     <Button
                       type="button"
                       className="w-1/2 max-w-[100px]"
-                      onClick={() => append({ id: 0, level: 1 })}
+                      onClick={() => {
+                        append({ language_id: 0, level: 1 });
+                        console.log("Current form values:", form.getValues());
+                      }}
                     >
                       <Plus />
                       追加

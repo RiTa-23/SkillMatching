@@ -1,6 +1,6 @@
 export interface Language {
-  id: number;
-  name: string;
+  language_id: number;
+  language_name: string;
   createdAt?: string;
   updatedAt?: string;
 }
