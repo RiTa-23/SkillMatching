@@ -82,8 +82,15 @@ const MySkillEditPage = () => {
     name: "languages",
   });
 
-  const onSubmit = async (values: SkillsFormValues) => {
-    const token = Cookies.get("token");
+  interface UpdateProfileParams {
+    token: string | undefined;
+    values: SkillsFormValues;
+  }
+
+  const updateProfile = async ({
+    token,
+    values,
+  }: UpdateProfileParams): Promise<void> => {
     const { data, error } = await fetcher<User>({
       url: "user",
       method: "PUT",
@@ -98,6 +105,34 @@ const MySkillEditPage = () => {
     if (error) {
       console.error("Validation errors:", error);
     }
+  };
+
+  const updateSkills = async ({
+    token,
+    values,
+  }: UpdateProfileParams): Promise<void> => {
+    values.languages.forEach(async (language) => {
+      const { data, error } = await fetcher<User>({
+        url: "skill",
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: language,
+      });
+      if (data) {
+        console.log("Update successful:", data);
+      }
+      if (error) {
+        console.error("Validation errors:", error);
+      }
+    });
+  };
+
+  const onSubmit = async (values: SkillsFormValues) => {
+    const token = Cookies.get("token");
+    updateProfile({ token, values });
+    updateSkills({ token, values });
   };
 
   return (
@@ -164,6 +199,7 @@ const MySkillEditPage = () => {
                       className="w-1/2 max-w-[100px]"
                       onClick={() => {
                         append({ language_id: 0, level: 1 });
+                        console.log("Current form values:", form.getValues());
                       }}
                     >
                       <Plus />

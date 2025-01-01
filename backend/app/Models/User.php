@@ -67,8 +67,8 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-    public function master()
+    public function languages()
     {
-        return $this->belongsToMany(Language::class)->withPivot('level')->withTimestamps();
+        return $this->belongsToMany(Language::class, 'user_language', 'user_id', 'language_id')->withPivot('level')->withTimestamps();
     }
 }
