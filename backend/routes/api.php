@@ -23,5 +23,6 @@ Route::middleware(['auth:sanctum'])
         Route::get('/user', [UserController::class, 'getUser']);
         Route::put('/user', [UserController::class, 'updateUser']);
         Route::get('/languages', [LanguageController::class, 'getLanguages']);
-        Route::post('/skill', [languageController::class, 'store']);
+        Route::post('/skill', [languageController::class, 'update']);
+        Route::get('/skill', [LanguageController::class, 'getSkills']);
     });

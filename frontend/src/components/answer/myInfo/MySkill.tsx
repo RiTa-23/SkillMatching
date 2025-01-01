@@ -14,47 +14,51 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import Cookies from "js-cookie";
 import fetcher from "@/lib/fetcher";
 import type { User } from "@/types/user";
+import type { Skill } from "@/types/Skill";
 
 const MySkill = () => {
-  const [user, setUser] = useState<User>({
-    user_id: 0,
-    name: "",
-    birthday: "",
-    email: "",
-    role_id: 0,
-  });
+  const [user, setUser] = useState<User>();
+  const [skills, setSkills] = useState<Skill[]>([]);
+
+  const getProfile = async (token: string | undefined): Promise<void> => {
+    const { data, error } = await fetcher<User>({
+      url: "user",
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (data) {
+      setUser(data as User);
+    }
+    if (error) {
+      console.error(error);
+    }
+  };
+
+  const getSkills = async (token: string | undefined): Promise<void> => {
+    const { data, error } = await fetcher<Skill[]>({
+      url: "skill",
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (data) {
+      setSkills(data as Skill[]);
+    }
+    if (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const token = Cookies.get("token");
-      const { data, error } = await fetcher<User>({
-        url: "user",
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (data) {
-        setUser(data as User);
-        console.log(user);
-      }
-      if (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
+    const token = Cookies.get("token");
+    getProfile(token);
+    getSkills(token);
   }, []);
 
-  console.log('User:', user);
-  const dummyLanguages = [
-    { id: 1, name: "JavaScript", level: 5 },
-    { id: 2, name: "TypeScript", level: 5 },
-    { id: 3, name: "Python", level: 4 },
-    { id: 4, name: "Ruby", level: 3 },
-    { id: 5, name: "Go", level: 5 },
-    { id: 6, name: "Java", level: 4 },
-  ];
+  console.log('skills:', skills);
 
   return (
     <Card className="w-[80%] max-w-[800px] p-2">
@@ -66,15 +70,15 @@ const MySkill = () => {
           <TableBody>
             <TableRow>
               <TableCell>氏名</TableCell>
-              <TableCell className="text-xl">{user.name}</TableCell>
+              <TableCell className="text-xl">{user?.name}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>生年月日</TableCell>
-              <TableCell className="text-xl">{user.birthday}</TableCell>
+              <TableCell className="text-xl">{user?.birthday}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>メールアドレス</TableCell>
-              <TableCell className="text-xl">{user.email}</TableCell>
+              <TableCell className="text-xl">{user?.email}</TableCell>
             </TableRow>
             <TableRow></TableRow>
           </TableBody>
@@ -82,21 +86,19 @@ const MySkill = () => {
         <div className="p-4">
           <p>使用可能言語</p>
           <div className="space-x-2 mt-4">
-            {dummyLanguages.map((language) => (
-              <HoverCard key={language.id}>
+            {skills?.map((skill) => (
+              <HoverCard key={skill.language_id}>
                 <HoverCardTrigger>
                   <Badge variant="outline" className="text-lg py-1 px-4 mb-4">
-                    {language.name}
+                    {skill.language_name}
                   </Badge>
                 </HoverCardTrigger>
                 <HoverCardContent>
-                  <div>
-                    {language.level === 1 && "初心者"}
-                    {language.level === 2 && "初級"}
-                    {language.level === 3 && "中級"}
-                    {language.level === 4 && "上級"}
-                    {language.level === 5 && "プロ"}
-                  </div>
+                    {skill.level === 1 && "初心者"}
+                    {skill.level === 2 && "初級"}
+                    {skill.level === 3 && "中級"}
+                    {skill.level === 4 && "上級"}
+                    {skill.level === 5 && "プロ"}
                 </HoverCardContent>
               </HoverCard>
             ))}
