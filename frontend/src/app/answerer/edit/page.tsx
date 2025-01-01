@@ -25,6 +25,7 @@ import LanguagesField from "@/components/answer/form/LanguageField";
 import Cookies from "js-cookie";
 import fetcher from "@/lib/fetcher";
 import type { User } from "@/types/user";
+import type { Skill } from "@/types/Skill";
 
 const SkillsSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -54,23 +55,36 @@ const MySkillEditPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       const token = Cookies.get("token");
-      const { data, error } = await fetcher<User>({
+      const { data: profileData, error: profileError } = await fetcher<User>({
         url: "user",
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      if (data) {
+      const { data: skillData, error: skillError } = await fetcher<Skill[]>({
+        url: "skill",
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (profileData && skillData) {
         form.reset({
-          name: data.name,
-          birthday: data.birthday,
-          email: data.email,
-          languages: [],
+          name: profileData.name,
+          birthday: profileData.birthday,
+          email: profileData.email,
+          languages: skillData.map((skill) => ({
+            language_id: skill.language_id,
+            level: skill.level,
+          })),
         });
       }
-      if (error) {
-        console.error(error);
+      if (profileError) {
+        console.error(profileError);
+      }
+      if (skillError) {
+        console.error(skillError);
       }
     };
 
