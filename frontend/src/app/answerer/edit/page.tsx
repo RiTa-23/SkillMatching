@@ -32,7 +32,7 @@ const SkillsSchema = z.object({
   email: z.string().email("Invalid email"),
   languages: z.array(
     z.object({
-      id: z.number(),
+      language_id: z.number(),
       level: z.number().min(1).max(5),
     })
   ),
@@ -41,6 +41,16 @@ const SkillsSchema = z.object({
 export type SkillsFormValues = z.infer<typeof SkillsSchema>;
 
 const MySkillEditPage = () => {
+  const form = useForm<SkillsFormValues>({
+    resolver: zodResolver(SkillsSchema),
+    defaultValues: {
+      name: "",
+      birthday: "",
+      email: "",
+      languages: [],
+    },
+  });
+
   useEffect(() => {
     const fetchData = async () => {
       const token = Cookies.get("token");
@@ -65,17 +75,7 @@ const MySkillEditPage = () => {
     };
 
     fetchData();
-  }, []);
-
-  const form = useForm<SkillsFormValues>({
-    resolver: zodResolver(SkillsSchema),
-    defaultValues: {
-      name: "",
-      birthday: "",
-      email: "",
-      languages: [],
-    },
-  });
+  }, [form]);
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -162,7 +162,9 @@ const MySkillEditPage = () => {
                     <Button
                       type="button"
                       className="w-1/2 max-w-[100px]"
-                      onClick={() => append({ id: 0, level: 1 })}
+                      onClick={() => {
+                        append({ language_id: 0, level: 1 });
+                      }}
                     >
                       <Plus />
                       追加

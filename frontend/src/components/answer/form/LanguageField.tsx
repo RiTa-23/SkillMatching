@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import { UseFormReturn } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -27,6 +29,9 @@ import { Slider } from "@/components/ui/slider";
 import { Check, ChevronsUpDown, Trash2 } from "lucide-react";
 
 import type { SkillsFormValues } from "@/app/answerer/edit/page";
+import type { Language } from "@/types/Language";
+import Cookies from "js-cookie";
+import fetcher from "@/lib/fetcher";
 
 type LanguagesFieldProps = {
   form: UseFormReturn<SkillsFormValues>;
@@ -34,36 +39,32 @@ type LanguagesFieldProps = {
   remove: (index: number) => void;
 };
 
-const languages = [
-  {
-    id: 1,
-    name: "JavaScript",
-  },
-  {
-    id: 2,
-    name: "TypeScript",
-  },
-  {
-    id: 3,
-    name: "Python",
-  },
-  {
-    id: 4,
-    name: "Ruby",
-  },
-  {
-    id: 5,
-    name: "Java",
-  },
-  {
-    id: 6,
-    name: "Go",
-  },
-];
-
 const levelLabels = ["初心者", "初級者", "中級者", "上級者", "プロ"];
 
 const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
+  const [languages, setLanguages] = useState<Language[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = Cookies.get("token");
+      const { data, error } = await fetcher<Language[]>({
+        url: "languages",
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (data) {
+        setLanguages(data as Language[]);
+      }
+      if (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="space-y-4 mt-4">
       <div className="flex items-center space-x-4">
@@ -74,11 +75,12 @@ const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
               role="combobox"
               className="w-[200px] justify-between"
             >
-              {form.getValues(`languages.${index}.id`)
+              {form.getValues(`languages.${index}.language_id`)
                 ? languages.find(
                     (language) =>
-                      language.id === form.getValues(`languages.${index}.id`)
-                  )?.name
+                      language.language_id ===
+                      form.getValues(`languages.${index}.language_id`)
+                  )?.language_name
                 : "言語を選択"}
               <ChevronsUpDown className="opacity-50" />
             </Button>
@@ -91,19 +93,22 @@ const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
                 <CommandGroup>
                   {languages.map((language) => (
                     <CommandItem
-                      key={language.id}
-                      value={language.name}
+                      key={language.language_id}
+                      value={language.language_name}
                       onSelect={async () => {
-                        form.setValue(`languages.${index}.id`, language.id);
+                        form.setValue(
+                          `languages.${index}.language_id`,
+                          language.language_id
+                        );
                         form.setValue(`languages.${index}.level`, 1);
                         await form.trigger(`languages.${index}`);
                       }}
                     >
-                      {language.name}
+                      {language.language_name}
                       <Check
                         className={`ml-auto ${
-                          form.getValues(`languages.${index}.id`) ===
-                          language.id
+                          form.getValues(`languages.${index}.language_id`) ===
+                          language.language_id
                             ? "opacity-100"
                             : "opacity-0"
                         }`}

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\LanguageController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -23,4 +24,5 @@ Route::middleware(['auth:sanctum'])
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/user', [UserController::class, 'getUser']);
         Route::put('/user', [UserController::class, 'updateUser']);
+        Route::get('/languages', [LanguageController::class, 'getLanguages']);
     });
