@@ -127,7 +127,7 @@ const MySkillEditPage = () => {
     values,
   }: UpdateProfileParams): Promise<void> => {
     values.languages.forEach(async (language) => {
-      const { data, error } = await fetcher<User>({
+      const { data, error } = await fetcher<Skill>({
         url: "skill",
         method: "POST",
         headers: {
