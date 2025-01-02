@@ -65,6 +65,29 @@ const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
     fetchData();
   }, []);
 
+  const deleteSkill = async (index: number) => {
+    console.log("index: ", index);
+    const token = Cookies.get("token");
+    const skillId = form.getValues(`languages.${index}.language_id`);
+    console.log("skillId", skillId);
+    console.log("language: ", form.getValues(`languages.${index}`));
+    if (skillId) {
+      const { data, error } = await fetcher({
+        url: `skill/${skillId}`,
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (data) {
+        console.log("Skill deleted", data);
+      }
+      if (error) {
+        console.error(error);
+      }
+    }
+  };
+
   return (
     <div className="space-y-4 mt-4">
       <div className="flex items-center space-x-4">
@@ -123,7 +146,10 @@ const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
         <Button
           type="button"
           variant="destructive"
-          onClick={() => remove(index)}
+          onClick={() => {
+            deleteSkill(index);
+            remove(index);
+          }}
         >
           <Trash2 />
         </Button>

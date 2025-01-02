@@ -92,6 +92,8 @@ const MySkillEditPage = () => {
     fetchData();
   }, [form]);
 
+  console.log("form.language", form.getValues("languages"));
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "languages",
@@ -212,10 +214,7 @@ const MySkillEditPage = () => {
                     <Button
                       type="button"
                       className="w-1/2 max-w-[100px]"
-                      onClick={() => {
-                        append({ language_id: 0, level: 1 });
-                        console.log("Current form values:", form.getValues());
-                      }}
+                      onClick={() => append({ language_id: 0, level: 1 })}
                     >
                       <Plus />
                       追加

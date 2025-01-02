@@ -25,4 +25,5 @@ Route::middleware(['auth:sanctum'])
         Route::get('/language', [LanguageController::class, 'getLanguages']);
         Route::put('/skill', [languageController::class, 'update']);
         Route::get('/skill', [LanguageController::class, 'getSkills']);
+        Route::delete('/skill/{language_id}', [LanguageController::class, 'deleteSkill']);
     });
