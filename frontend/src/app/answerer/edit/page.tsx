@@ -92,8 +92,6 @@ const MySkillEditPage = () => {
     fetchData();
   }, [form]);
 
-  console.log("form.language", form.getValues("languages"));
-
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "languages",

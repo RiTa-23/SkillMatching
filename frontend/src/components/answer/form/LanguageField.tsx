@@ -66,11 +66,8 @@ const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
   }, []);
 
   const deleteSkill = async (index: number) => {
-    console.log("index: ", index);
     const token = Cookies.get("token");
     const skillId = form.getValues(`languages.${index}.language_id`);
-    console.log("skillId", skillId);
-    console.log("language: ", form.getValues(`languages.${index}`));
     if (skillId) {
       const { data, error } = await fetcher({
         url: `skill/${skillId}`,
