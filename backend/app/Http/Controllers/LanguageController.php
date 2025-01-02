@@ -34,7 +34,6 @@ class LanguageController extends Controller
         return response()->json($language, 200);
     }
 
-
     public function getSkills()
     {
         $user = User::find(Auth::id());
@@ -52,5 +51,18 @@ class LanguageController extends Controller
             ];
         });
         return response()->json($skills, 200);
+    }
+
+    public function deleteSkill($language_id)
+    {
+        $user = User::find(Auth::id());
+        $language = Language::find($language_id);
+        if (!$language) {
+            return response()->json(['message' => 'Language not found'], 404);
+        }
+
+        $user->languages()->detach($language->language_id);
+
+        return response()->json($language, 200);
     }
 }
