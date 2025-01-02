@@ -50,7 +50,7 @@ const SignupForm = () => {
 
   const onSubmit = async (values: SignupFormValues) => {
     const { data, error } = await fetcher({
-      url: "register",
+      url: "signup",
       method: "POST",
       body: values,
     });
@@ -62,10 +62,10 @@ const SignupForm = () => {
     }
   };
 
-  const logout = async () => {
+  const signout = async () => {
     const token = Cookies.get("token");
     const { data, error } = await fetcher({
-      url: "logout",
+      url: "signout",
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -125,7 +125,7 @@ const SignupForm = () => {
           ログインはこちら
         </Link>
       </CardFooter>
-      <Button onClick={logout}>ログアウト</Button>
+      <Button onClick={signout}>ログアウト</Button>
     </Card>
   );
 };

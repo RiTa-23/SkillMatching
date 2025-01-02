@@ -23,12 +23,13 @@ class LanguageController extends Controller
             'level' => 'required|integer|between:1,5',
         ]);
 
+        $user = User::find(Auth::id());
         $language = Language::find($request->language_id);
         if (!$language) {
             return response()->json(['message' => 'Language not found'], 404);
         }
 
-        $language->users()->attach(Auth::id(), ['level' => $request->level]);
+        $user->languages()->syncWithoutDetaching([$language->language_id => ['level' => $request->level]]);
 
         return response()->json($language, 200);
     }

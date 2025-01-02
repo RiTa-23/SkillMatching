@@ -14,15 +14,15 @@ Route::get('/test', function () {
     return response()->json(['message' => '接続テスト成功']);
 });
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/signup', [AuthController::class, 'signup']);
+Route::post('/signin', [AuthController::class, 'signin']);
 
 Route::middleware(['auth:sanctum'])
     ->group(function () {
-        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::post('/signout', [AuthController::class, 'signout']);
         Route::get('/user', [UserController::class, 'getUser']);
         Route::put('/user', [UserController::class, 'updateUser']);
-        Route::get('/languages', [LanguageController::class, 'getLanguages']);
+        Route::get('/language', [LanguageController::class, 'getLanguages']);
         Route::post('/skill', [languageController::class, 'update']);
         Route::get('/skill', [LanguageController::class, 'getSkills']);
     });

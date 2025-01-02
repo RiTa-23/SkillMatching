@@ -70,6 +70,7 @@ const MySkillEditPage = () => {
         },
       });
       if (profileData && skillData) {
+        console.log("skillData", skillData);
         form.reset({
           name: profileData.name,
           birthday: profileData.birthday,

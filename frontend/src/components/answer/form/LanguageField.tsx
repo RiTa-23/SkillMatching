@@ -48,7 +48,7 @@ const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
     const fetchData = async () => {
       const token = Cookies.get("token");
       const { data, error } = await fetcher<Language[]>({
-        url: "languages",
+        url: "language",
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

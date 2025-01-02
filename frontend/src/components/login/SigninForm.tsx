@@ -53,7 +53,7 @@ const SigninForm = () => {
 
   const signinAsPersonal = async (values: SigninFormValues) => {
     const { data, error } = await fetcher({
-      url: "login",
+      url: "signin",
       method: "POST",
       body: values,
     });
@@ -69,7 +69,7 @@ const SigninForm = () => {
 
   const signinAsCompany = async (values: SigninFormValues) => {
     const { data, error } = await fetcher({
-      url: "login",
+      url: "signin",
       method: "POST",
       body: values,
     });

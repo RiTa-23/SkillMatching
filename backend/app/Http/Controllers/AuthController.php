@@ -12,7 +12,7 @@ use Carbon\Carbon;
 class AuthController extends Controller
 {
     // ユーザー登録
-    public function register(Request $request)
+    public function signup(Request $request)
     {
         $user = User::create([
             'email' => $request->email,
@@ -26,7 +26,7 @@ class AuthController extends Controller
     }
 
     // ログイン処理
-    public function login(Request $request)
+    public function signin(Request $request)
     {
         $credentials = $request->validate([
             'email' => ['required'],
@@ -56,7 +56,7 @@ class AuthController extends Controller
     }
 
     // ログアウト
-    public function logout(Request $request)
+    public function signout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
         return response()->json('Logout Success.', Response::HTTP_OK);
