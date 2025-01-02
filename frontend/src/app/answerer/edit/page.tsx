@@ -129,7 +129,7 @@ const MySkillEditPage = () => {
     values.languages.forEach(async (language) => {
       const { data, error } = await fetcher<Skill>({
         url: "skill",
-        method: "POST",
+        method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
         },
