@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\CompanyController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -26,4 +27,5 @@ Route::middleware(['auth:sanctum'])
         Route::put('/skill', [languageController::class, 'update']);
         Route::get('/skill', [LanguageController::class, 'getSkills']);
         Route::delete('/skill/{language_id}', [LanguageController::class, 'deleteSkill']);
+        Route::get('/company', [CompanyController::class, 'getCompanies']);
     });
