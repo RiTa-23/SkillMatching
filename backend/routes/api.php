@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\QuestionController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -28,4 +29,5 @@ Route::middleware(['auth:sanctum'])
         Route::get('/skill', [LanguageController::class, 'getSkills']);
         Route::delete('/skill/{language_id}', [LanguageController::class, 'deleteSkill']);
         Route::get('/company', [CompanyController::class, 'getCompanies']);
+        Route::get('/question/{company_id}', [QuestionController::class, 'getQuestions']);
     });

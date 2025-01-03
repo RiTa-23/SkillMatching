@@ -4,20 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Company extends Model
+class Category extends Model
 {
-    protected $primaryKey = 'company_id';
+    protected $primaryKey = 'category_id'; // 主キーを指定
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'company_name', // 言語名フィールド
+        'category_name', // カテゴリ名フィールド
     ];
 
     public function questions()
     {
-        return $this->hasMany(Question::class, 'company_id', 'company_id');
+        return $this->hasMany(Question::class, 'category_id', 'category_id');
     }
 }
