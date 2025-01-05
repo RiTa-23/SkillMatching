@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -15,12 +18,15 @@ import {
 import { Button } from "@/components/ui/button";
 
 import AnswerField from "@/components/answer/company/questions/AnswerField";
+
+import Cookies from "js-cookie";
+import fetcher from "@/lib/fetcher";
 import type { Question } from "@/types/Question";
 
 const AnswerSchema = z.object({
   answers: z.array(
     z.object({
-      questionId: z.number(),
+      question_Id: z.number(),
       answer: z.string().min(1, "回答を入力してください"),
     })
   ),
@@ -29,46 +35,48 @@ const AnswerSchema = z.object({
 export type AnswerFormValues = z.infer<typeof AnswerSchema>;
 
 const AnswerPage = () => {
-  const dummyQuestions: Question[] = [
-    {
-      id: 1,
-      category: "技術力",
-      language: "JavaScript",
-      question: "この質問は何問目ですか？",
-    },
-    {
-      id: 2,
-      category: "技術力",
-      language: "Go",
-      question: "この質問は何問目ですか？",
-    },
-    {
-      id: 3,
-      category: "問題解決力",
-      question: "この質問は何問目ですか？",
-    },
-    {
-      id: 4,
-      category: "コミュニケーション力",
-      question: "この質問は何問目ですか？",
-    },
-    {
-      id: 5,
-      question: "この質問は何問目ですか？",
-    },
-  ];
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const { companyId } = useParams();
 
   const form = useForm<AnswerFormValues>({
     resolver: zodResolver(AnswerSchema),
     defaultValues: {
-      answers: dummyQuestions.map((q) => ({ questionId: q.id, answer: "" })),
+      answers: [],
     },
   });
 
-  const { fields } = useFieldArray({
+  const { fields, append } = useFieldArray({
     control: form.control,
     name: "answers",
   });
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    const getQuestions = async () => {
+      const { data, error } = await fetcher<Question[]>({
+        url: `question/${companyId}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (data) {
+        setQuestions(data as Question[]);
+        form.reset({
+          answers: data.map((q) => ({
+            question_id: q.question_id,
+            answer: "",
+          })),
+        });
+        data.forEach((q) => append({ question_Id: q.question_id, answer: "" }));
+      }
+      if (error) {
+        console.error(error);
+      }
+    };
+
+    getQuestions();
+  }, [companyId, form, append]);
 
   const onSubmit = (values: AnswerFormValues) => {
     console.log("Answers: ", values);
@@ -83,7 +91,7 @@ const AnswerPage = () => {
           className="w-[80%] max-w-[800px] space-y-8"
         >
           {fields.map((field, index) => (
-            <Card key={field.id} className="p-8 mt-10">
+            <Card key={field.question_Id} className="p-8 mt-10">
               <CardContent>
                 <FormField
                   control={form.control}
@@ -94,7 +102,7 @@ const AnswerPage = () => {
                         <AnswerField
                           index={index}
                           form={form}
-                          question={dummyQuestions[index]}
+                          question={questions[index]}
                         />
                       </FormControl>
                       <FormMessage />

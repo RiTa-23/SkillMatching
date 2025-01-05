@@ -16,13 +16,13 @@ const AnswerField = ({ index, form, question }: AnswerFieldProps) => {
   return (
     <>
       <div className="mb-4">
-        <p className="text-lg font-semibold">{question.question}</p>
+        <p className="text-lg font-semibold">{question.question_text}</p>
         <div className="space-x-2">
-          {question.category && (
-            <Badge className="mt-2">{question.category}</Badge>
+          {question.category_name && (
+            <Badge className="mt-2">{question.category_name}</Badge>
           )}
-          {question.language && (
-            <Badge className="mt-2">{question.language}</Badge>
+          {question.language_name && (
+            <Badge className="mt-2">{question.language_name}</Badge>
           )}
         </div>
       </div>

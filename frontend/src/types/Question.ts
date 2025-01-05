@@ -1,9 +1,8 @@
 export interface Question {
   question_id: number;
-  company_id: string;
-  category_id?: string;
-  language_id?: string;
-  question: string;
+  category_name?: string;
+  language_name?: string;
+  question_text: string;
   createdAt?: string;
   updatedAt?: string;
 }
