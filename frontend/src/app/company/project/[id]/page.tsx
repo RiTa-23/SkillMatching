@@ -44,7 +44,7 @@ const ProjectDetailPage = () => {
           </CardHeader>
           <CardContent>
             {project.members.map((member, index) => (
-              <Card key={index} className="mb-2 bg-blue-100">
+              <Card key={index} className="mb-2 bg-blue-100 inline-block">
                 <CardContent>{member}</CardContent>
               </Card>
             ))}
@@ -56,7 +56,7 @@ const ProjectDetailPage = () => {
           </CardHeader>
           <CardContent>
             {project.technologies.map((tech, index) => (
-              <Card key={index} className="mb-2 bg-green-100">
+              <Card key={index} className="mb-2 bg-green-100 inline-block">
                 <CardContent>{tech}</CardContent>
               </Card>
             ))}
