@@ -1,5 +1,8 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Cog } from "lucide-react";
+import { CircleUser } from "lucide-react";
+
 
 const ProjectDetailPage = () => {
   const project = {
@@ -40,7 +43,7 @@ const ProjectDetailPage = () => {
         </Card>
         <Card className="mb-4">
           <CardHeader>
-            <CardTitle>担当者</CardTitle>
+            <CardTitle><CircleUser></CircleUser>担当者</CardTitle>
           </CardHeader>
           <CardContent>
             {project.members.map((member, index) => (
@@ -52,7 +55,7 @@ const ProjectDetailPage = () => {
         </Card>
         <Card className="mb-4">
           <CardHeader>
-            <CardTitle>使用技術</CardTitle>
+            <CardTitle><Cog></Cog>使用技術</CardTitle>
           </CardHeader>
           <CardContent>
             {project.technologies.map((tech, index) => (
