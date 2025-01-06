@@ -58,27 +58,27 @@ const MySkill = () => {
     getSkills(token);
   }, []);
 
-  console.log('skills:', skills);
+  console.log("skills:", skills);
 
   return (
     <Card className="w-[80%] max-w-[800px] p-2">
       <CardHeader>
         <CardTitle>マイスキル</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pb-0">
         <Table>
           <TableBody>
             <TableRow>
               <TableCell>氏名</TableCell>
-              <TableCell className="text-xl">{user?.name}</TableCell>
+              <TableCell>{user?.name}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>生年月日</TableCell>
-              <TableCell className="text-xl">{user?.birthday}</TableCell>
+              <TableCell>{user?.birthday}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>メールアドレス</TableCell>
-              <TableCell className="text-xl">{user?.email}</TableCell>
+              <TableCell>{user?.email}</TableCell>
             </TableRow>
             <TableRow></TableRow>
           </TableBody>
@@ -89,16 +89,16 @@ const MySkill = () => {
             {skills?.map((skill) => (
               <HoverCard key={skill.language_id}>
                 <HoverCardTrigger>
-                  <Badge variant="outline" className="text-lg py-1 px-4 mb-4">
+                  <Badge variant="outline" className="py-1 px-4 mb-3">
                     {skill.language_name}
                   </Badge>
                 </HoverCardTrigger>
                 <HoverCardContent>
-                    {skill.level === 1 && "初心者"}
-                    {skill.level === 2 && "初級"}
-                    {skill.level === 3 && "中級"}
-                    {skill.level === 4 && "上級"}
-                    {skill.level === 5 && "プロ"}
+                  {skill.level === 1 && "初心者"}
+                  {skill.level === 2 && "初級"}
+                  {skill.level === 3 && "中級"}
+                  {skill.level === 4 && "上級"}
+                  {skill.level === 5 && "プロ"}
                 </HoverCardContent>
               </HoverCard>
             ))}
