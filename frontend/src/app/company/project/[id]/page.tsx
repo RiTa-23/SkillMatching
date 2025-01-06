@@ -1,5 +1,5 @@
 import React from 'react';
-import Box from "@/components/project/box";
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
 const ProjectDetailPage = () => {
   const project = {
@@ -12,18 +12,57 @@ const ProjectDetailPage = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">案件詳細</h1>
-      <div style={{ marginBottom: '10px' }}>
-        <strong>案件元会社名:</strong> {project.companyName}
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <strong>案件名:</strong> {project.projectName}
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <strong>案件の詳細:</strong> {project.projectDetail}
-      </div>
-      <Box title="担当者" content={project.members} />
-      <Box title="使用技術" content={project.technologies} />
+      <Card className="p-6">
+        <h1 className="text-2xl font-bold mb-4">案件詳細</h1>
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle>案件元会社名</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {project.companyName}
+          </CardContent>
+        </Card>
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle>案件名</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {project.projectName}
+          </CardContent>
+        </Card>
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle>案件の詳細</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {project.projectDetail}
+          </CardContent>
+        </Card>
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle>担当者</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {project.members.map((member, index) => (
+              <Card key={index} className="mb-2 bg-blue-100">
+                <CardContent>{member}</CardContent>
+              </Card>
+            ))}
+          </CardContent>
+        </Card>
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle>使用技術</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {project.technologies.map((tech, index) => (
+              <Card key={index} className="mb-2 bg-green-100">
+                <CardContent>{tech}</CardContent>
+              </Card>
+            ))}
+          </CardContent>
+        </Card>
+      </Card>
     </div>
   );
 };
