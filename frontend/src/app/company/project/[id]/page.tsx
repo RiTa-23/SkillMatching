@@ -1,4 +1,5 @@
 import React from 'react';
+import Box from "@/components/project/box";
 
 const ProjectDetailPage = () => {
   const project = {
@@ -10,8 +11,8 @@ const ProjectDetailPage = () => {
   };
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>案件詳細</h1>
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-4">案件詳細</h1>
       <div style={{ marginBottom: '10px' }}>
         <strong>案件元会社名:</strong> {project.companyName}
       </div>
@@ -21,12 +22,8 @@ const ProjectDetailPage = () => {
       <div style={{ marginBottom: '10px' }}>
         <strong>案件の詳細:</strong> {project.projectDetail}
       </div>
-      <div style={{ marginBottom: '10px' }}>
-        <strong>担当者:</strong> {project.members.join('・')}
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <strong>使用技術:</strong> {project.technologies.join('・')}
-      </div>
+      <Box title="担当者" content={project.members} />
+      <Box title="使用技術" content={project.technologies} />
     </div>
   );
 };
