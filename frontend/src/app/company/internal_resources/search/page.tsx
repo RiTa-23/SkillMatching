@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import SearchForm from "@/components/search/SearchForm";
+import Link from 'next/link';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 interface Resource {
   id: number;
@@ -10,6 +13,13 @@ interface Resource {
   proficiency: string;
   communication: string;
   problemSolving: string;
+}
+
+interface Filters {
+  language: string | null;
+  proficiency: [number, number] | null;
+  communication: [number, number] | null;
+  problemSolving: [number, number] | null;
 }
 
 const languages = ["JavaScript", "Python", "Java", "C++", "Ruby"];
@@ -28,8 +38,8 @@ const generateMockData = (count: number): Resource[] => {
   }));
 };
 
-const InternalResourcesSearch: React.FC = () => {
-  const [filters, setFilters] = useState({
+const Page = () => {
+  const [filters, setFilters] = useState<Filters>({
     language: null,
     proficiency: null,
     communication: null,
@@ -49,9 +59,9 @@ const InternalResourcesSearch: React.FC = () => {
   const filteredData = mockData.filter((item) => {
     return (
       (!filters.language || item.language === filters.language) &&
-      (!filters.proficiency || item.proficiency === filters.proficiency) &&
-      (!filters.communication || item.communication === filters.communication) &&
-      (!filters.problemSolving || item.problemSolving === filters.problemSolving)
+      (!filters.proficiency || (levels.indexOf(item.proficiency) >= filters.proficiency[0] && levels.indexOf(item.proficiency) <= filters.proficiency[1])) &&
+      (!filters.communication || (parseInt(item.communication) >= filters.communication[0] && parseInt(item.communication) <= filters.communication[1])) &&
+      (!filters.problemSolving || (parseInt(item.problemSolving) >= filters.problemSolving[0] && parseInt(item.problemSolving) <= filters.problemSolving[1]))
     );
   });
 
@@ -61,42 +71,52 @@ const InternalResourcesSearch: React.FC = () => {
     currentPage * resultsPerPage
   );
 
-  const handleSearch = (filters: typeof filters) => {
+  const handleSearch = (filters: Filters) => {
     setFilters(filters);
     setCurrentPage(1);
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">社内人材検索</h1>
-      <SearchForm onSearch={handleSearch} />
+    <div>
+      <Card style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <CardTitle>社内人材検索</CardTitle><br></br>
+        <CardContent><SearchForm onSearch={handleSearch} /></CardContent>
+      </Card>
+      
       <div className="mt-6">
         {paginatedData.map((resource) => (
-          <div key={resource.id} className="p-2 border-b">
-            {resource.name} - {resource.language} - 熟練度: {resource.proficiency} -
-            コミュニケーション: {resource.communication} - 問題解決: {resource.problemSolving}
-          </div>
+          <Link key={resource.id} href={`/company/resources/${resource.id}`}>
+            <Card style={{ maxWidth: '800px', margin: '0 auto', marginBottom: '20px' }}>
+              <CardContent>
+                <h6>{resource.name}</h6>
+                <p>{resource.language}</p>
+                <p>熟練度: {resource.proficiency}</p>
+                <p>コミュニケーション: {resource.communication}</p>
+                <p>問題解決: {resource.problemSolving}</p>
+              </CardContent>
+            </Card>
+          </Link>
         ))}
       </div>
       <div className="flex justify-between items-center mt-4">
-        <button
+        <Button
           disabled={currentPage === 1}
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
         >
           前へ
-        </button>
+        </Button>
         <span>
           {currentPage} / {Math.ceil(filteredData.length / resultsPerPage)}
         </span>
-        <button
+        <Button
           disabled={currentPage === Math.ceil(filteredData.length / resultsPerPage)}
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, Math.ceil(filteredData.length / resultsPerPage)))}
+          onClick={() => setCurrentPage((prev) => prev + 1)}
         >
           次へ
-        </button>
+        </Button>
       </div>
     </div>
   );
 };
 
-export default InternalResourcesSearch;
+export default Page;

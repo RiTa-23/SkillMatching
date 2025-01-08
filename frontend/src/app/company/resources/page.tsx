@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import SearchForm from "@/components/search/SearchForm";
 import Link from 'next/link';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 interface Resource {
@@ -78,12 +78,15 @@ const Page = () => {
 
   return (
     <div>
-      <h1>人材検索</h1>
-      <SearchForm onSearch={handleSearch} />
+      <Card style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <CardTitle>人材検索</CardTitle><br></br>
+        <CardContent><SearchForm onSearch={handleSearch} /></CardContent>
+      </Card>
+      
       <div className="mt-6">
         {paginatedData.map((resource) => (
           <Link key={resource.id} href={`/company/resources/${resource.id}`}>
-            <Card>
+            <Card style={{ maxWidth: '800px', margin: '0 auto', marginBottom: '20px' }}>
               <CardContent>
                 <h6>{resource.name}</h6>
                 <p>{resource.language}</p>
