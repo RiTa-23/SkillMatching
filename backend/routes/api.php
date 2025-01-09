@@ -33,5 +33,5 @@ Route::middleware(['auth:sanctum'])
         Route::delete('/skill/{language_id}', [LanguageController::class, 'deleteSkill']);
         Route::get('/company', [CompanyController::class, 'getCompanies']);
         Route::get('/question/{company_id}', [QuestionController::class, 'getQuestions']);
-
+        Route::post('/answer', [QuestionController::class, 'saveAnswers']);
     });
