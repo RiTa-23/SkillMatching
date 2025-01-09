@@ -20,4 +20,9 @@ class Company extends Model
     {
         return $this->hasMany(Question::class, 'company_id', 'company_id');
     }
+
+    public function projects()
+    {
+        return $this->hasMany(Project::class, 'company_id', 'company_id');
+    }
 }
