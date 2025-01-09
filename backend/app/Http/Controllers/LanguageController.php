@@ -65,4 +65,24 @@ class LanguageController extends Controller
 
         return response()->json($language, 200);
     }
+
+    public function searchUsersByLanguage(Request $request)
+    {
+        $request->validate([
+            'language_id' => 'required|exists:languages,language_id',
+            'level' => 'required|integer|min:1|max:5',
+        ]);
+
+        $languageId = $request->input('language_id');
+        $level = $request->input('level');
+
+        $users = \DB::table('user_language')
+            ->join('users', 'user_language.user_id', '=', 'users.user_id')
+            ->join('languages', 'user_language.language_id', '=', 'languages.language_id')
+            ->where('user_language.language_id', $languageId)
+            ->where('user_language.level', $level)
+            ->select('users.user_id', 'users.name', 'languages.language_name', 'user_language.level')
+            ->get();
+        return response()->json($users, 200);
+    }
 }
