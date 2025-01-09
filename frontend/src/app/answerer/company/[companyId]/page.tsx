@@ -65,8 +65,22 @@ const AnswerPage = () => {
     fetchData();
   }, []);
 
-  const onSubmit = (data: AnswerFormValues) => {
-    console.log(data);
+  const onSubmit = async (values: AnswerFormValues) => {
+    const token = Cookies.get("token");
+    const { data, error } = await fetcher({
+      url: `answer`,
+      method: "POST",
+      body: values,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (data) {
+      console.log("Answer submitted:", data);
+    }
+    if (error) {
+      console.error("Validation errors:", error);
+    }
   };
 
   return (
