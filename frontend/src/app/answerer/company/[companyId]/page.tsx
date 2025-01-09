@@ -3,30 +3,29 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   Form,
-  FormControl,
   FormField,
   FormItem,
+  FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 
 import AnswerField from "@/components/answer/company/questions/AnswerField";
 
-import Cookies from "js-cookie";
 import fetcher from "@/lib/fetcher";
+import Cookies from "js-cookie";
 import type { Question } from "@/types/Question";
 
 const AnswerSchema = z.object({
   answers: z.array(
     z.object({
-      question_Id: z.number(),
+      question_id: z.number(),
       answer: z.string().min(1, "回答を入力してください"),
     })
   ),
@@ -45,14 +44,9 @@ const AnswerPage = () => {
     },
   });
 
-  const { fields, append } = useFieldArray({
-    control: form.control,
-    name: "answers",
-  });
-
   useEffect(() => {
     const token = Cookies.get("token");
-    const getQuestions = async () => {
+    const fetchData = async () => {
       const { data, error } = await fetcher<Question[]>({
         url: `question/${companyId}`,
         method: "GET",
@@ -61,25 +55,18 @@ const AnswerPage = () => {
         },
       });
       if (data) {
-        setQuestions(data as Question[]);
-        form.reset({
-          answers: data.map((q) => ({
-            question_id: q.question_id,
-            answer: "",
-          })),
-        });
-        data.forEach((q) => append({ question_Id: q.question_id, answer: "" }));
+        setQuestions(data);
       }
       if (error) {
         console.error(error);
       }
     };
 
-    getQuestions();
-  }, [companyId, form, append]);
+    fetchData();
+  }, []);
 
-  const onSubmit = (values: AnswerFormValues) => {
-    console.log("Answers: ", values);
+  const onSubmit = (data: AnswerFormValues) => {
+    console.log(data);
   };
 
   return (
@@ -90,27 +77,25 @@ const AnswerPage = () => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-[80%] max-w-[800px] space-y-8"
         >
-          {fields.map((field, index) => (
-            <Card key={field.question_Id} className="p-8 mt-10">
-              <CardContent>
-                <FormField
-                  control={form.control}
-                  name={`answers.${index}.answer`}
-                  render={() => (
-                    <FormItem>
-                      <FormControl>
-                        <AnswerField
-                          index={index}
-                          form={form}
-                          question={questions[index]}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
+          {questions.map((question, index) => (
+            <FormField
+              key={question.question_id}
+              control={form.control}
+              name={`answers.${index}.answer`}
+              render={() => (
+                <FormItem>
+                  <FormControl>
+                    <AnswerField
+                      index={index}
+                      question_id={question.question_id}
+                      form={form}
+                      question={question}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           ))}
           <div className="flex justify-center">
             <Button
