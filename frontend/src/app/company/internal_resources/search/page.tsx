@@ -79,7 +79,7 @@ const Page = () => {
   return (
     <div>
       <Card style={{ maxWidth: '800px', margin: '0 auto' }}>
-        <CardTitle>人材検索</CardTitle><br></br>
+        <CardTitle>社内人材検索</CardTitle><br></br>
         <CardContent><SearchForm onSearch={handleSearch} /></CardContent>
       </Card>
       

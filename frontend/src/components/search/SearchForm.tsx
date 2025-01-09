@@ -12,7 +12,9 @@ interface Language {
 
 interface SearchFormProps {
     onSearch: (filters: { languageId: string; level: string }) => void;
+
 }
+
 
 const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
     const [languages, setLanguages] = useState<Language[]>([]);
@@ -75,6 +77,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
             <Button onClick={handleSubmit}>検索</Button>
         </div>
     );
+ 
 };
 
 export default SearchForm;
