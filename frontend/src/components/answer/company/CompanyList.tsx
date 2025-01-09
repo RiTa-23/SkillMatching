@@ -70,10 +70,14 @@ const CompanyList = (props: CompanyListProps) => {
           {currentData.map((company) => (
             <TableRow key={company.company_id} className="hover:bg-gray-100">
               <TableCell>
-                <Link href={""}>{company.company_id}</Link>
+                <Link href={`/answerer/company/${company.company_id}`}>
+                  {company.company_id}
+                </Link>
               </TableCell>
               <TableCell>
-                <Link href={""}>{company.company_name}</Link>
+                <Link href={`/answerer/company/${company.company_id}`}>
+                  {company.company_name}
+                </Link>
               </TableCell>
             </TableRow>
           ))}

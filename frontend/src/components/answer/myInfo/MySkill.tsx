@@ -58,8 +58,6 @@ const MySkill = () => {
     getSkills(token);
   }, []);
 
-  console.log("skills:", skills);
-
   return (
     <Card className="w-[80%] max-w-[800px] p-2">
       <CardHeader>
