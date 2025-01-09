@@ -20,4 +20,9 @@ class Language extends Model
     {
         return $this->belongsToMany(User::class, 'user_language', 'language_id', 'user_id')->withPivot('level')->withTimestamps();
     }
+
+    public function questions()
+    {
+        return $this->hasMany(Question::class, 'language_id', 'language_id');
+    }
 }

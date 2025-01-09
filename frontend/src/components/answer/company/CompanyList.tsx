@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 import {
@@ -68,8 +69,16 @@ const CompanyList = (props: CompanyListProps) => {
         <TableBody>
           {currentData.map((company) => (
             <TableRow key={company.company_id} className="hover:bg-gray-100">
-              <TableCell className="">{company.company_id}</TableCell>
-              <TableCell className="">{company.company_name}</TableCell>
+              <TableCell>
+                <Link href={`/answerer/company/${company.company_id}`}>
+                  {company.company_id}
+                </Link>
+              </TableCell>
+              <TableCell>
+                <Link href={`/answerer/company/${company.company_id}`}>
+                  {company.company_name}
+                </Link>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -1,26 +1,31 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   Form,
-  FormControl,
   FormField,
   FormItem,
+  FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 
 import AnswerField from "@/components/answer/company/questions/AnswerField";
+
+import fetcher from "@/lib/fetcher";
+import Cookies from "js-cookie";
 import type { Question } from "@/types/Question";
 
 const AnswerSchema = z.object({
   answers: z.array(
     z.object({
-      questionId: z.number(),
+      question_id: z.number(),
       answer: z.string().min(1, "回答を入力してください"),
     })
   ),
@@ -29,49 +34,53 @@ const AnswerSchema = z.object({
 export type AnswerFormValues = z.infer<typeof AnswerSchema>;
 
 const AnswerPage = () => {
-  const dummyQuestions: Question[] = [
-    {
-      id: 1,
-      category: "技術力",
-      language: "JavaScript",
-      question: "この質問は何問目ですか？",
-    },
-    {
-      id: 2,
-      category: "技術力",
-      language: "Go",
-      question: "この質問は何問目ですか？",
-    },
-    {
-      id: 3,
-      category: "問題解決力",
-      question: "この質問は何問目ですか？",
-    },
-    {
-      id: 4,
-      category: "コミュニケーション力",
-      question: "この質問は何問目ですか？",
-    },
-    {
-      id: 5,
-      question: "この質問は何問目ですか？",
-    },
-  ];
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const { companyId } = useParams();
 
   const form = useForm<AnswerFormValues>({
     resolver: zodResolver(AnswerSchema),
     defaultValues: {
-      answers: dummyQuestions.map((q) => ({ questionId: q.id, answer: "" })),
+      answers: [],
     },
   });
 
-  const { fields } = useFieldArray({
-    control: form.control,
-    name: "answers",
-  });
+  useEffect(() => {
+    const token = Cookies.get("token");
+    const fetchData = async () => {
+      const { data, error } = await fetcher<Question[]>({
+        url: `question/${companyId}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (data) {
+        setQuestions(data);
+      }
+      if (error) {
+        console.error(error);
+      }
+    };
 
-  const onSubmit = (values: AnswerFormValues) => {
-    console.log("Answers: ", values);
+    fetchData();
+  }, []);
+
+  const onSubmit = async (values: AnswerFormValues) => {
+    const token = Cookies.get("token");
+    const { data, error } = await fetcher({
+      url: `answer`,
+      method: "POST",
+      body: values,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (data) {
+      console.log("Answer submitted:", data);
+    }
+    if (error) {
+      console.error("Validation errors:", error);
+    }
   };
 
   return (
@@ -82,27 +91,25 @@ const AnswerPage = () => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-[80%] max-w-[800px] space-y-8"
         >
-          {fields.map((field, index) => (
-            <Card key={field.id} className="p-8 mt-10">
-              <CardContent>
-                <FormField
-                  control={form.control}
-                  name={`answers.${index}.answer`}
-                  render={() => (
-                    <FormItem>
-                      <FormControl>
-                        <AnswerField
-                          index={index}
-                          form={form}
-                          question={dummyQuestions[index]}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
+          {questions.map((question, index) => (
+            <FormField
+              key={question.question_id}
+              control={form.control}
+              name={`answers.${index}.answer`}
+              render={() => (
+                <FormItem>
+                  <FormControl>
+                    <AnswerField
+                      index={index}
+                      question_id={question.question_id}
+                      form={form}
+                      question={question}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           ))}
           <div className="flex justify-center">
             <Button
