@@ -1,98 +1,83 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import fetcher from "@/lib/fetcher"; // fetcher のインポート
 
-const languages = ["未選択", "JavaScript", "Python", "Java", "C++", "Ruby"];
-const levels = ["未選択", "初学者", "初級", "中級", "上級", "プロ"];
-const ratings = ["未選択", "1", "2", "3", "4", "5"];
-
-interface SearchFormProps {
-    onSearch: (filters: {
-        language: string | null;
-        proficiency: string | null;
-        communication: string | null;
-        problemSolving: string | null;
-    }) => void;
+interface Language {
+    language_id: number;
+    language_name: string;
 }
 
+interface SearchFormProps {
+    onSearch: (filters: { languageId: string; level: string }) => void;
+
+}
+
+
 const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
-    const [language, setLanguage] = useState<string | null>("未選択");
-    const [proficiency, setProficiency] = useState<string | null>("未選択");
-    const [communication, setCommunication] = useState<string | null>("未選択");
-    const [problemSolving, setProblemSolving] = useState<string | null>("未選択");
+    const [languages, setLanguages] = useState<Language[]>([]);
+    const [languageId, setLanguageId] = useState<string>("");
+    const [level, setLevel] = useState("");
+
+    useEffect(() => {
+        // APIからlanguagesを取得
+        const fetchLanguages = async () => {
+            const { data, error } = await fetcher<Language[]>({
+                url: "language", // エンドポイントURL
+                method: "GET",
+            });
+
+            if (data) {
+                setLanguages(data);
+            }
+
+            if (error) {
+                console.error("Error fetching languages:", error);
+            }
+        };
+
+        fetchLanguages();
+    }, []);
 
     const handleSubmit = () => {
-        onSearch({
-            language: language === "未選択" ? null : language,
-            proficiency: proficiency === "未選択" ? null : proficiency,
-            communication: communication === "未選択" ? null : communication,
-            problemSolving: problemSolving === "未選択" ? null : problemSolving,
-        });
+        onSearch({ languageId, level });
+        console.log(languageId, level);
     };
 
     return (
-        <div className="p-4 border rounded-lg shadow">
-            <div className="mb-4">
-                <label className="block mb-2 text-sm font-medium text-gray-700">使用言語</label>
-                <Select onValueChange={(value) => setLanguage(value)}>
-                    <SelectTrigger>{language || "未選択"}</SelectTrigger>
-                    <SelectContent>
-                        {languages.map((option, index) => (
-                            <SelectItem key={index} value={option}>
-                                {option}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
-            <div className="mb-4">
-                <label className="block mb-2 text-sm font-medium text-gray-700">熟練度</label>
-                <Select onValueChange={(value) => setProficiency(value)}>
-                    <SelectTrigger>{proficiency || "未選択"}</SelectTrigger>
-                    <SelectContent>
-                        {levels.map((option, index) => (
-                            <SelectItem key={index} value={option}>
-                                {option}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
-            <div className="mb-4">
-                <label className="block mb-2 text-sm font-medium text-gray-700">コミュニケーション能力</label>
-                <Select onValueChange={(value) => setCommunication(value)}>
-                    <SelectTrigger>{communication || "未選択"}</SelectTrigger>
-                    <SelectContent>
-                        {ratings.map((option, index) => (
-                            <SelectItem key={index} value={option}>
-                                {option}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
-            <div className="mb-4">
-                <label className="block mb-2 text-sm font-medium text-gray-700">問題解決能力</label>
-                <Select onValueChange={(value) => setProblemSolving(value)}>
-                    <SelectTrigger>{problemSolving || "未選択"}</SelectTrigger>
-                    <SelectContent>
-                        {ratings.map((option, index) => (
-                            <SelectItem key={index} value={option}>
-                                {option}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
-            <button
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-                onClick={handleSubmit}
-            >
-                検索
-            </button>
+        <div className="flex flex-col space-y-4 w-full max-w-md">
+            {/* 言語選択 */}
+            <Select onValueChange={(value) => setLanguageId(value)}>
+                <SelectTrigger>
+                    <span>
+                        {languages.find((lang) => lang.language_id.toString() === languageId)?.language_name ||
+                            "言語を選択"}
+                    </span>
+                </SelectTrigger>
+                <SelectContent>
+                    {languages.map((language) => (
+                        <SelectItem key={language.language_id} value={language.language_id.toString()}>
+                            {language.language_name}
+                        </SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
+
+            {/* レベル入力 */}
+            <input
+                type="number"
+                placeholder="Level (1-5)"
+                value={level}
+                onChange={(e) => setLevel(e.target.value)}
+                className="border p-2 rounded"
+            />
+
+            <Button onClick={handleSubmit}>検索</Button>
         </div>
     );
+ 
 };
 
 export default SearchForm;

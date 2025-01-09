@@ -19,15 +19,19 @@ Route::get('/test', function () {
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/signin', [AuthController::class, 'signin']);
 
+Route::get('/search', [LanguageController::class, 'searchUsersByLanguage']);
+Route::get('/language', [LanguageController::class, 'getLanguages']);
+
 Route::middleware(['auth:sanctum'])
     ->group(function () {
         Route::post('/signout', [AuthController::class, 'signout']);
         Route::get('/user', [UserController::class, 'getUser']);
         Route::put('/user', [UserController::class, 'updateUser']);
-        Route::get('/language', [LanguageController::class, 'getLanguages']);
+        //Route::get('/language', [LanguageController::class, 'getLanguages']);
         Route::put('/skill', [languageController::class, 'update']);
         Route::get('/skill', [LanguageController::class, 'getSkills']);
         Route::delete('/skill/{language_id}', [LanguageController::class, 'deleteSkill']);
         Route::get('/company', [CompanyController::class, 'getCompanies']);
         Route::get('/question/{company_id}', [QuestionController::class, 'getQuestions']);
+
     });
