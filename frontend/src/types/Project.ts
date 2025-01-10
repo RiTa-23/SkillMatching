@@ -6,7 +6,6 @@ export interface Project {
 
 export interface ProjectDetail {
   project_id: number;
-  company_name: string;
   title: string;
   contents: string;
   start_date: string;
