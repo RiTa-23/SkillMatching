@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
@@ -8,51 +12,34 @@ import {
 } from "@/components/ui/table";
 
 import ProjectDetail from "@/components/answer/project/ProjectDetail";
+
+import Cookies from "js-cookie";
+import fetcher from "@/lib/fetcher";
 import type { Project } from "@/types/Project";
 
 const ProjectList = () => {
-  const dummyProjects: Project[] = [
-    {
-      id: 1,
-      name: "Project 1",
-      description: "Project 1 description",
-      startDate: "2021-01-01",
-      endDate: "2021-12-31",
-      status: "完了",
-    },
-    {
-      id: 2,
-      name: "Project 2",
-      description: "Project 2 description",
-      startDate: "2021-01-01",
-      endDate: "2021-12-31",
-      status: "進行中",
-    },
-    {
-      id: 3,
-      name: "Project 3",
-      description: "Project 3 description",
-      startDate: "2021-01-01",
-      endDate: "2021-12-31",
-      status: "未着手",
-    },
-    {
-      id: 4,
-      name: "Project 4",
-      description: "Project 4 description",
-      startDate: "2021-01-01",
-      endDate: "2021-12-31",
-      status: "完了",
-    },
-    {
-      id: 5,
-      name: "Project 5",
-      description: "Project 5 description",
-      startDate: "2021-01-01",
-      endDate: "2021-12-31",
-      status: "進行中",
-    },
-  ];
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    const fetchData = async () => {
+      const { data, error } = await fetcher<Project[]>({
+        url: "project",
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (data) {
+        setProjects(data);
+      }
+      if (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -67,8 +54,8 @@ const ProjectList = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {dummyProjects.map((project) => (
-                <ProjectDetail key={project.id} project={project} />
+              {projects.map((project) => (
+                <ProjectDetail key={project.project_id} project={project} />
               ))}
             </TableBody>
           </Table>

@@ -19,13 +19,13 @@ const ProjectDetail = (props: ProjectProps) => {
   const { project } = props;
 
   return (
-    <Dialog key={project.id}>
-      <TableRow key={project.id} className="hover:bg-gray-100">
+    <Dialog key={project.project_id}>
+      <TableRow key={project.project_id} className="hover:bg-gray-100">
         <TableCell>
-          <DialogTrigger>{project.id}</DialogTrigger>
+          <DialogTrigger>{project.project_id}</DialogTrigger>
         </TableCell>
         <TableCell>
-          <DialogTrigger>{project.name}</DialogTrigger>
+          <DialogTrigger>{project.title}</DialogTrigger>
         </TableCell>
         <TableCell>
           <DialogTrigger>{project.status}</DialogTrigger>
@@ -33,14 +33,14 @@ const ProjectDetail = (props: ProjectProps) => {
       </TableRow>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{project.name}</DialogTitle>
+          <DialogTitle>{project.title}</DialogTitle>
         </DialogHeader>
         <div>
-          <p>開始日: {project.startDate}</p>
-          <p>終了日: {project.endDate}</p>
+          <p>開始日: {project.start_date}</p>
+          <p>終了日: {project.end_date}</p>
           <p>ステータス: {project.status}</p>
-          <p>説明: {project.description}</p>
-          <Link href={`./project/${project.id}/`}>
+          <p>説明: {project.contents}</p>
+          <Link href={`./project/${project.project_id}/`}>
             <div
               role="button"
               className="inline-flex items-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 mt-2"

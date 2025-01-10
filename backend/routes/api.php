@@ -8,7 +8,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\AnswerController;
-use App\Models\Answer;
+use App\Http\Controllers\ProjectController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -36,4 +36,5 @@ Route::middleware(['auth:sanctum'])
         Route::get('/company', [CompanyController::class, 'getCompanies']);
         Route::get('/question/{company_id}', [QuestionController::class, 'getQuestions']);
         Route::post('/answer', [AnswerController::class, 'saveAnswers']);
+        Route::get('/project', [ProjectController::class, 'getProjects']);
     });
