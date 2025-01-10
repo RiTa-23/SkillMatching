@@ -20,4 +20,15 @@ class ProjectController extends Controller
 
         return response()->json($projects, 200);
     }
+
+    public function getProject($project_id)
+    {
+        $project = Project::find($project_id);
+
+        if ($project) {
+            return response()->json($project, 200);
+        } else {
+            return response()->json(['message' => 'プロジェクトが見つかりません'], 404);
+        }
+    }
 }
