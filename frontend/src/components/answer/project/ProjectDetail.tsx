@@ -36,10 +36,10 @@ const ProjectDetail = (props: ProjectProps) => {
           <DialogTitle>{project.title}</DialogTitle>
         </DialogHeader>
         <div>
-          <p>開始日: {project.start_date}</p>
+          {/* <p>開始日: {project.start_date}</p>
           <p>終了日: {project.end_date}</p>
           <p>ステータス: {project.status}</p>
-          <p>説明: {project.contents}</p>
+          <p>説明: {project.contents}</p> */}
           <Link href={`./project/${project.project_id}/`}>
             <div
               role="button"
