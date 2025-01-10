@@ -1,4 +1,5 @@
 "use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -16,6 +17,8 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 
+import type { ProjectDetail } from "@/types/Project";
+
 const EvaluationSchema = z.object({
   evaluation: z.enum(["1", "2", "3", "4", "5"], {
     required_error: "1~5のいずれかを選択してください",
@@ -25,7 +28,11 @@ const EvaluationSchema = z.object({
 
 export type EvaluationFormValues = z.infer<typeof EvaluationSchema>;
 
-const ProjectEvaluation = () => {
+interface ProjectEvaluationProps {
+  project: ProjectDetail;
+}
+
+const ProjectEvaluation = ({ project }: ProjectEvaluationProps) => {
   const form = useForm<EvaluationFormValues>({
     resolver: zodResolver(EvaluationSchema),
   });
@@ -37,6 +44,13 @@ const ProjectEvaluation = () => {
   return (
     <Card className="w-[80%] max-w-[800px] p-8 mt-10">
       <CardContent>
+        <ul>
+          <li>{project.title}</li>
+          <li>{project.contents}</li>
+          <li>{project.start_date}</li>
+          <li>{project.end_date}</li>
+          <li>{project.status}</li>
+        </ul>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -54,36 +68,11 @@ const ProjectEvaluation = () => {
                       defaultValue={field.value}
                       className="flex space-x-4"
                     >
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="1" />
-                        </FormControl>
-                        <FormLabel className="font-normal">1</FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="2" />
-                        </FormControl>
-                        <FormLabel className="font-normal">2</FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="3" />
-                        </FormControl>
-                        <FormLabel className="font-normal">3</FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="4" />
-                        </FormControl>
-                        <FormLabel className="font-normal">4</FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="5" />
-                        </FormControl>
-                        <FormLabel className="font-normal">5</FormLabel>
-                      </FormItem>
+                      <RadioGroupItem value="1" />
+                      <RadioGroupItem value="2" />
+                      <RadioGroupItem value="3" />
+                      <RadioGroupItem value="4" />
+                      <RadioGroupItem value="5" />
                     </RadioGroup>
                   </FormControl>
                   <FormMessage />
