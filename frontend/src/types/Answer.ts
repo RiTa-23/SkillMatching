@@ -11,5 +11,5 @@ export interface Answer {
 
 export interface AnswerHistory {
   company: string;
-  data: Date;
+  date: string;
 }
