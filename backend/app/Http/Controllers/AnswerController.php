@@ -26,18 +26,18 @@ class AnswerController extends Controller
     {
         $user_id = Auth::id();
         $limit = $request->query('limit', 5);
-        $answers = Answer::with('question', 'question.category', 'question.language')
+        $answers = Answer::with('question', 'question.company')
             ->where('user_id', $user_id)
-            ->take($limit)
             ->get()
+            ->unique('question_id')
+            ->values()
+            ->take($limit)
             ->map(
                 function ($answer) {
                     return [
                         'question_id' => $answer->question_id,
-                        'question' => $answer->question->question_text,
-                        'category' => $answer->question->category->category_name,
-                        'language' => $answer->question->language->language_name,
-                        'answer' => $answer->answer,
+                        'company' => $answer->question->company->company_name,
+                        'date' => $answer->created_at,
                     ];
                 }
             );
