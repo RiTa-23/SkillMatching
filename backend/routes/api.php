@@ -36,6 +36,7 @@ Route::middleware(['auth:sanctum'])
         Route::get('/company', [CompanyController::class, 'getCompanies']);
         Route::get('/question/{company_id}', [QuestionController::class, 'getQuestions']);
         Route::post('/answer', [AnswerController::class, 'saveAnswers']);
+        Route::get('/answer', [AnswerController::class, 'getAnswerHistory']);
         Route::get('/project', [ProjectController::class, 'getProjects']);
         Route::get('/project/{project_id}', [ProjectController::class, 'getProject']);
         Route::post('/project/evaluation', [ProjectController::class, 'evaluation']);

@@ -21,4 +21,26 @@ class AnswerController extends Controller
         }
         return response()->json($answers, 200);
     }
+
+    public function getAnswerHistory(Request $request)
+    {
+        $user_id = Auth::id();
+        $limit = $request->query('limit', 5);
+        $answers = Answer::with('question', 'question.category', 'question.language')
+            ->where('user_id', $user_id)
+            ->take($limit)
+            ->get()
+            ->map(
+                function ($answer) {
+                    return [
+                        'question_id' => $answer->question_id,
+                        'question' => $answer->question->question_text,
+                        'category' => $answer->question->category->category_name,
+                        'language' => $answer->question->language->language_name,
+                        'answer' => $answer->answer,
+                    ];
+                }
+            );
+        return response()->json($answers, 200);
+    }
 }
