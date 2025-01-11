@@ -1,5 +1,7 @@
 "use client";
 
+import { useParams } from "next/navigation";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -17,13 +19,16 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 
+import Cookies from "js-cookie";
+import fetcher from "@/lib/fetcher";
 import type { ProjectDetail } from "@/types/Project";
 
 const EvaluationSchema = z.object({
-  evaluation: z.enum(["1", "2", "3", "4", "5"], {
+  project_id: z.string().nullable(),
+  rating: z.enum(["1", "2", "3", "4", "5"], {
     required_error: "1~5のいずれかを選択してください",
   }),
-  comment: z.string().max(100, "100文字以内で入力してください"),
+  feedback: z.string().max(100, "100文字以内で入力してください"),
 });
 
 export type EvaluationFormValues = z.infer<typeof EvaluationSchema>;
@@ -33,13 +38,33 @@ interface ProjectEvaluationProps {
 }
 
 const ProjectEvaluation = ({ project }: ProjectEvaluationProps) => {
+  const { projectId } = useParams();
   const form = useForm<EvaluationFormValues>({
     resolver: zodResolver(EvaluationSchema),
+    defaultValues: {
+      project_id: Array.isArray(projectId) ? projectId[0] : projectId,
+      rating: undefined,
+      feedback: "",
+    },
   });
 
-  function onSubmit(data: EvaluationFormValues) {
-    console.log(data);
-  }
+  const onSubmit = async (values: EvaluationFormValues) => {
+    const token = Cookies.get("token");
+    const { data, error } = await fetcher({
+      url: `project/evaluation`,
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: values,
+    });
+    if (data) {
+      console.log("Evaluation submitted", data);
+    }
+    if (error) {
+      console.error("Evaluation error", error);
+    }
+  };
 
   return (
     <Card className="w-[80%] max-w-[800px] p-8 mt-10">
@@ -58,7 +83,7 @@ const ProjectEvaluation = ({ project }: ProjectEvaluationProps) => {
           >
             <FormField
               control={form.control}
-              name="evaluation"
+              name="rating"
               render={({ field }) => (
                 <FormItem className="space-y-3">
                   <FormLabel>評価</FormLabel>
@@ -81,7 +106,7 @@ const ProjectEvaluation = ({ project }: ProjectEvaluationProps) => {
             />
             <FormField
               control={form.control}
-              name="comment"
+              name="feedback"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>コメント</FormLabel>

@@ -1,6 +1,5 @@
 export interface ProjectEvaluation {
-  projectId: number;
-  userId: number;
-  evaluation: string;
-  comment: string;
+  project_id: number;
+  rating: number;
+  feedback: string;
 }
