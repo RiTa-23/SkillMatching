@@ -47,7 +47,7 @@ class ProjectController extends Controller
         }
     }
 
-    public function evaluation(Request $request)
+    public function evaluation(Request $request, $project_id)
     {
         $user = User::find(Auth::id());
         $request->validate([
@@ -55,7 +55,7 @@ class ProjectController extends Controller
             'rating' => 'required|integer|between:1,5',
         ]);
 
-        $project = Project::find($request->project_id);
+        $project = Project::find($project_id);
         if (!$project) {
             return response()->json(['message' => 'プロジェクトが見つかりません'], 404);
         }

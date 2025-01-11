@@ -24,7 +24,6 @@ import fetcher from "@/lib/fetcher";
 import type { ProjectDetail } from "@/types/Project";
 
 const EvaluationSchema = z.object({
-  project_id: z.string().nullable(),
   rating: z.enum(["1", "2", "3", "4", "5"], {
     required_error: "1~5のいずれかを選択してください",
   }),
@@ -42,7 +41,6 @@ const ProjectEvaluation = ({ project }: ProjectEvaluationProps) => {
   const form = useForm<EvaluationFormValues>({
     resolver: zodResolver(EvaluationSchema),
     defaultValues: {
-      project_id: Array.isArray(projectId) ? projectId[0] : projectId,
       rating: undefined,
       feedback: "",
     },
@@ -51,7 +49,7 @@ const ProjectEvaluation = ({ project }: ProjectEvaluationProps) => {
   const onSubmit = async (values: EvaluationFormValues) => {
     const token = Cookies.get("token");
     const { data, error } = await fetcher({
-      url: `project/evaluation`,
+      url: `project/${projectId}/evaluation`,
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
