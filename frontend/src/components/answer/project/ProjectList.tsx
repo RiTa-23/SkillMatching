@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { toast } from "sonner";
 
 import ProjectDetail from "@/components/answer/project/ProjectDetail";
 
@@ -19,10 +20,12 @@ import type { Project } from "@/types/Project";
 
 const ProjectList = () => {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = Cookies.get("token");
     const fetchData = async () => {
+      setLoading(true);
       const { data, error } = await fetcher<Project[]>({
         url: "project",
         method: "GET",
@@ -34,8 +37,9 @@ const ProjectList = () => {
         setProjects(data);
       }
       if (error) {
-        console.error(error);
+        toast.error("案件の取得に失敗しました", { position: "top-center" });
       }
+      setLoading(false);
     };
 
     fetchData();
@@ -45,20 +49,24 @@ const ProjectList = () => {
     <>
       <Card className="w-[80%] max-w-[800px] p-8 mt-10">
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px]">No.</TableHead>
-                <TableHead>案件</TableHead>
-                <TableHead>進捗</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {projects.map((project) => (
-                <ProjectDetail key={project.project_id} project={project} />
-              ))}
-            </TableBody>
-          </Table>
+          {loading ? (
+            <p className="pt-4">Loading...</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[100px]">No.</TableHead>
+                  <TableHead>案件</TableHead>
+                  <TableHead>進捗</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {projects.map((project) => (
+                  <ProjectDetail key={project.project_id} project={project} />
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 import CompanyList from "@/components/answer/company/CompanyList";
 
@@ -14,10 +15,12 @@ import type { Company } from "@/types/company";
 const CompanyPage = () => {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [filteredCompanies, setFilteredCompanies] = useState<Company[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const token = Cookies.get("token");
     const fetchData = async () => {
+      setLoading(true);
       const { data, error } = await fetcher<Company[]>({
         url: "company",
         method: "GET",
@@ -28,11 +31,12 @@ const CompanyPage = () => {
       if (data) {
         setCompanies(data);
         setFilteredCompanies(data);
-        console.log(data);
+        console.log("会社情報取得成功", data);
       }
       if (error) {
-        console.error(error);
+        toast.error("会社情報の取得に失敗しました", { position: "top-center" });
       }
+      setLoading(false);
     };
 
     fetchData();
@@ -53,7 +57,11 @@ const CompanyPage = () => {
       <Card className="w-[80%] max-w-[700px] p-8 mt-10">
         <CardContent className="pb-0">
           <Input type="text" placeholder="Search..." onChange={handleChange} />
-          <CompanyList companies={filteredCompanies} />
+          {loading ? (
+            <p className="pt-4">Loading...</p>
+          ) : (
+            <CompanyList companies={filteredCompanies} />
+          )}
         </CardContent>
       </Card>
     </div>

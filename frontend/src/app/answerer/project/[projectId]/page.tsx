@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
+import { toast } from "sonner";
+
 import ProjectEvaluation from "@/components/answer/project/ProjectEvaluation";
 
 import Cookies from "js-cookie";
@@ -12,10 +14,12 @@ import type { ProjectDetail } from "@/types/Project";
 const ProjectEvaluationPage = () => {
   const { projectId } = useParams();
   const [project, setProject] = useState<ProjectDetail>();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = Cookies.get("token");
     const fetchData = async () => {
+      setLoading(true);
       const { data, error } = await fetcher<ProjectDetail>({
         url: `project/${projectId}`,
         method: "GET",
@@ -27,8 +31,9 @@ const ProjectEvaluationPage = () => {
         setProject(data);
       }
       if (error) {
-        console.error(error);
+        toast.error("案件の取得に失敗しました", { position: "top-center" });
       }
+      setLoading(false);
     };
 
     fetchData();
@@ -36,7 +41,7 @@ const ProjectEvaluationPage = () => {
 
   return (
     <div className="flex flex-col items-center h-[90vh]">
-      {project && <ProjectEvaluation project={project} />}
+      {project && <ProjectEvaluation project={project} loading={loading} />}
     </div>
   );
 };

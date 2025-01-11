@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { z } from "zod";
@@ -26,6 +26,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import fetcher from "@/lib/fetcher";
@@ -41,6 +42,7 @@ const SigninSchema = z.object({
 type SigninFormValues = z.infer<typeof SigninSchema>;
 
 const SigninForm = () => {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const form = useForm<SigninFormValues>({
@@ -52,6 +54,7 @@ const SigninForm = () => {
   });
 
   const signinAsPersonal = async (values: SigninFormValues) => {
+    setLoading(true);
     const { data, error } = await fetcher({
       url: "signin",
       method: "POST",
@@ -59,12 +62,12 @@ const SigninForm = () => {
     });
     if (data) {
       Cookies.set("token", (data as { token: string }).token);
-      console.log("Login successful:", data);
       router.push(`/answerer`);
     }
     if (error) {
-      console.error("Validation errors:", error);
+      toast.error("ログイン失敗", { position: "top-center" });
     }
+    setLoading(false);
   };
 
   const signinAsCompany = async (values: SigninFormValues) => {
@@ -106,7 +109,7 @@ const SigninForm = () => {
                     <FormItem>
                       <FormLabel>メールアドレス</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="email" {...field} />
+                        <Input placeholder="email" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -130,7 +133,9 @@ const SigninForm = () => {
                   )}
                 />
                 <div className="flex justify-center">
-                  <Button type="submit">ログイン</Button>
+                  <Button type="submit" className="w-[25%]" disabled={loading}>
+                    {loading ? "処理中..." : "ログイン"}
+                  </Button>
                 </div>
               </form>
             </Form>
@@ -180,7 +185,9 @@ const SigninForm = () => {
                   )}
                 />
                 <div className="flex justify-center">
-                  <Button type="submit">ログイン</Button>
+                  <Button type="submit" className="w-[25%]" disabled={loading}>
+                    {loading ? "処理中..." : "ログイン"}
+                  </Button>
                 </div>
               </form>
             </Form>
