@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Project;
 
 class ProjectController extends Controller
@@ -42,6 +43,27 @@ class ProjectController extends Controller
             } else {
                 return response()->json(['message' => 'プロジェクトが見つかりません'], 404);
             }
+        }
+    }
+
+    public function evaluation(Request $request, $project_id)
+    {
+        $use_id = Auth::id();
+        $request->validate([
+            'feedback' => 'required',
+            'rating' => 'required|integer|between:1,5',
+        ]);
+
+        $project = Project::find($project_id);
+
+        if ($project) {
+            $project->feedback = $request->feedback;
+            $project->rating = $request->rating;
+            $project->save();
+
+            return response()->json(['message' => '評価が完了しました'], 200);
+        } else {
+            return response()->json(['message' => 'プロジェクトが見つかりません'], 404);
         }
     }
 }
