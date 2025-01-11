@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Project;
 
 class ProjectController extends Controller
@@ -43,5 +45,26 @@ class ProjectController extends Controller
                 return response()->json(['message' => 'プロジェクトが見つかりません'], 404);
             }
         }
+    }
+
+    public function evaluation(Request $request)
+    {
+        $user = User::find(Auth::id());
+        $request->validate([
+            'feedback' => 'required',
+            'rating' => 'required|integer|between:1,5',
+        ]);
+
+        $project = Project::find($request->project_id);
+        if (!$project) {
+            return response()->json(['message' => 'プロジェクトが見つかりません'], 404);
+        }
+
+        $user->projects()->syncWithoutDetaching([$project->project_id => [
+            'feedback' => $request->feedback,
+            'rating' => $request->rating,
+        ]]);
+
+        return response()->json($project, 200);
     }
 }

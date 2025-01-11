@@ -18,6 +18,11 @@ class Project extends Model
 
     public function company()
     {
-        return $this->belongsTo('App\Models\Company', 'company_id', 'company_id');
+        return $this->belongsTo(Company::class, 'company_id', 'company_id');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_project', 'project_id', 'user_id')->withPivot('feedback', 'rating')->withTimestamps();
     }
 }
