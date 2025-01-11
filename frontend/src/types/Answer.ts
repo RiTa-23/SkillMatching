@@ -8,3 +8,8 @@ export interface Answer {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface AnswerHistory {
+  company: string;
+  data: Date;
+}

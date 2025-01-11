@@ -35,7 +35,6 @@ class AnswerController extends Controller
             ->map(
                 function ($answer) {
                     return [
-                        'question_id' => $answer->question_id,
                         'company' => $answer->question->company->company_name,
                         'date' => $answer->created_at,
                     ];
