@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -39,6 +39,7 @@ const AnswerPage = () => {
   const [loadingForGet, setLoadingForGet] = useState(false);
   const [loadingForPost, setLoadingForPost] = useState(false);
   const { companyId } = useParams();
+  const router = useRouter();
 
   const form = useForm<AnswerFormValues>({
     resolver: zodResolver(AnswerSchema),
@@ -60,7 +61,6 @@ const AnswerPage = () => {
       });
       if (data) {
         setQuestions(data);
-        console.log("Questions:", data);
       }
       if (error) {
         toast.error("質問の取得に失敗しました");
@@ -84,6 +84,7 @@ const AnswerPage = () => {
     });
     if (data) {
       toast.success("回答を提出しました", { position: "top-center" });
+      router.push(`/answerer/company`);
     }
     if (error) {
       toast.error("回答の提出に失敗しました", { position: "top-center" });

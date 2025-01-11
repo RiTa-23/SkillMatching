@@ -34,7 +34,7 @@ const CompanyPage = () => {
         console.log("会社情報取得成功", data);
       }
       if (error) {
-        toast.error("会社情報の取得に失敗しました");
+        toast.error("会社情報の取得に失敗しました", { position: "top-center" });
       }
       setLoading(false);
     };
