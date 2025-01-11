@@ -36,7 +36,7 @@ const AnswerHistory = () => {
         setAnswerHistory(data);
       }
       if (error) {
-        toast.error("回答履歴の取得に失敗しました");
+        toast.error("回答履歴の取得に失敗しました", { position: "top-center" });
       }
       setLoading(false);
     };

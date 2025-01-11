@@ -35,7 +35,9 @@ const MySkill = () => {
       setUser(data as User);
     }
     if (error) {
-      toast.error("ユーザー情報の取得に失敗しました");
+      toast.error("ユーザー情報の取得に失敗しました", {
+        position: "top-center",
+      });
     }
     setLoading(false);
   };
@@ -53,7 +55,7 @@ const MySkill = () => {
       setSkills(data as Skill[]);
     }
     if (error) {
-      toast.error("スキル情報の取得に失敗しました");
+      toast.error("スキル情報の取得に失敗しました", { position: "top-center" });
     }
     setLoading(false);
   };

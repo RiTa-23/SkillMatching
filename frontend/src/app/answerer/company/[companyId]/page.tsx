@@ -15,6 +15,7 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
+import { toast } from "sonner";
 
 import AnswerField from "@/components/answer/company/questions/AnswerField";
 
@@ -35,6 +36,8 @@ export type AnswerFormValues = z.infer<typeof AnswerSchema>;
 
 const AnswerPage = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [loadingForGet, setLoadingForGet] = useState(false);
+  const [loadingForPost, setLoadingForPost] = useState(false);
   const { companyId } = useParams();
 
   const form = useForm<AnswerFormValues>({
@@ -47,6 +50,7 @@ const AnswerPage = () => {
   useEffect(() => {
     const token = Cookies.get("token");
     const fetchData = async () => {
+      setLoadingForGet(true);
       const { data, error } = await fetcher<Question[]>({
         url: `question/${companyId}`,
         method: "GET",
@@ -56,16 +60,19 @@ const AnswerPage = () => {
       });
       if (data) {
         setQuestions(data);
+        console.log("Questions:", data);
       }
       if (error) {
-        console.error(error);
+        toast.error("質問の取得に失敗しました");
       }
+      setLoadingForGet(false);
     };
 
     fetchData();
   }, []);
 
   const onSubmit = async (values: AnswerFormValues) => {
+    setLoadingForPost(true);
     const token = Cookies.get("token");
     const { data, error } = await fetcher({
       url: `answer`,
@@ -76,51 +83,63 @@ const AnswerPage = () => {
       },
     });
     if (data) {
-      console.log("Answer submitted:", data);
+      toast.success("回答を提出しました", { position: "top-center" });
     }
     if (error) {
-      console.error("Validation errors:", error);
+      toast.error("回答の提出に失敗しました", { position: "top-center" });
     }
+    setLoadingForPost(false);
   };
 
   return (
     <div className="flex flex-col items-center h-[90vh]">
-      <h2 className="text-2xl font-bold mt-8">会社名</h2>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-[80%] max-w-[800px] space-y-8"
-        >
-          {questions.map((question, index) => (
-            <FormField
-              key={question.question_id}
-              control={form.control}
-              name={`answers.${index}.answer`}
-              render={() => (
-                <FormItem>
-                  <FormControl>
-                    <AnswerField
-                      index={index}
-                      question_id={question.question_id}
-                      form={form}
-                      question={question}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ))}
-          <div className="flex justify-center">
-            <Button
-              type="submit"
-              className="w-[60%] max-w-[100px] text-xl py-6 my-4"
-            >
-              提出
-            </Button>
-          </div>
-        </form>
-      </Form>
+      {loadingForGet ? (
+        <p className="pt-6">Loading...</p>
+      ) : (
+        questions.length > 0 && (
+          <>
+            <h2 className="text-2xl font-bold mt-8">
+              {questions[0].company_name}
+            </h2>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="w-[80%] max-w-[800px] space-y-8"
+              >
+                {questions.map((question, index) => (
+                  <FormField
+                    key={question.question_id}
+                    control={form.control}
+                    name={`answers.${index}.answer`}
+                    render={() => (
+                      <FormItem>
+                        <FormControl>
+                          <AnswerField
+                            index={index}
+                            question_id={question.question_id}
+                            form={form}
+                            question={question}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ))}
+                <div className="flex justify-center">
+                  <Button
+                    type="submit"
+                    className="w-[60%] max-w-[100px] text-xl py-6 my-4"
+                    disabled={loadingForPost}
+                  >
+                    {loadingForPost ? "送信中..." : "送信"}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </>
+        )
+      )}
     </div>
   );
 };
