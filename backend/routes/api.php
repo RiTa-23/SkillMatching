@@ -38,4 +38,5 @@ Route::middleware(['auth:sanctum'])
         Route::post('/answer', [AnswerController::class, 'saveAnswers']);
         Route::get('/project', [ProjectController::class, 'getProjects']);
         Route::get('/project/{project_id}', [ProjectController::class, 'getProject']);
+        Route::post('/project/evaluation', [ProjectController::class, 'evaluation']);
     });
