@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import Cookies from "js-cookie";
 import fetcher from "@/lib/fetcher";
 import type { AnswerHistory } from "@/types/Answer";
+import { formatDate } from "@/lib/formatDate";
 
 const AnswerHistory = () => {
   const [answerHistory, setAnswerHistory] = useState<AnswerHistory[]>([]);
@@ -64,7 +65,7 @@ const AnswerHistory = () => {
               {answerHistory.map((answer) => (
                 <TableRow key={answer.company}>
                   <TableCell>{answer.company}</TableCell>
-                  <TableCell>{answer.date}</TableCell>
+                  <TableCell>{formatDate(answer.date)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
