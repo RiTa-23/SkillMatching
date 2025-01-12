@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +12,7 @@ import {
 } from "@/components/ui/hover-card";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
+import { Pencil } from "lucide-react";
 
 import Cookies from "js-cookie";
 import fetcher from "@/lib/fetcher";
@@ -67,7 +69,7 @@ const MySkill = () => {
   }, []);
 
   return (
-    <Card className="w-[80%] max-w-[800px] p-2">
+    <Card className="relative w-[80%] max-w-[800px] p-2">
       <CardHeader>
         <CardTitle>マイスキル</CardTitle>
       </CardHeader>
@@ -115,6 +117,11 @@ const MySkill = () => {
               </div>
             </div>
           </>
+        )}
+        {!loading && (
+          <Link href="/answerer/edit" className="absolute top-4 right-4 border rounded p-2">
+            <Pencil className="w-6 h-6 cursor-pointer" />
+          </Link>
         )}
       </CardContent>
     </Card>
