@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -18,12 +18,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
 import Cookies from "js-cookie";
 import fetcher from "@/lib/fetcher";
 import type { ProjectDetail } from "@/types/Project";
+import { formatDate } from "@/lib/formatDate";
 
 const EvaluationSchema = z.object({
   rating: z.enum(["1", "2", "3", "4", "5"], {
@@ -75,18 +77,34 @@ const ProjectEvaluation = ({ project, loading }: ProjectEvaluationProps) => {
 
   return (
     <Card className="w-[80%] max-w-[800px] p-8 mt-10">
+      <CardHeader>
+        <CardTitle>{project.title}</CardTitle>
+      </CardHeader>
       <CardContent>
         {loading ? (
           <p>Loading...</p>
         ) : (
           <>
-            <ul>
-              <li>{project.title}</li>
-              <li>{project.contents}</li>
-              <li>{project.start_date}</li>
-              <li>{project.end_date}</li>
-              <li>{project.status}</li>
-            </ul>
+            <Table className="mb-6">
+              <TableBody>
+                <TableRow>
+                  <TableCell>概要</TableCell>
+                  <TableCell>{project.contents}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>開始日</TableCell>
+                  <TableCell>{formatDate(project.start_date)}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>終了日</TableCell>
+                  <TableCell>{formatDate(project.end_date)}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>進捗</TableCell>
+                  <TableCell>{project.status}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -97,18 +115,21 @@ const ProjectEvaluation = ({ project, loading }: ProjectEvaluationProps) => {
                   name="rating"
                   render={({ field }) => (
                     <FormItem className="space-y-3">
-                      <FormLabel>評価</FormLabel>
+                      <FormLabel className="text-xl font-semibold">
+                        評価
+                      </FormLabel>
                       <FormControl>
                         <RadioGroup
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                           className="flex space-x-4"
                         >
-                          <RadioGroupItem value="1" />
-                          <RadioGroupItem value="2" />
-                          <RadioGroupItem value="3" />
-                          <RadioGroupItem value="4" />
-                          <RadioGroupItem value="5" />
+                          {Array.from({ length: 5 }, (_, i) => (
+                            <div key={i + 1} className="flex items-center space-x-2">
+                              <RadioGroupItem value={(i + 1).toString()} id={(i + 1).toString()} />
+                              <FormLabel htmlFor={(i + 1).toString()}>{i + 1}</FormLabel>
+                            </div>
+                          ))}
                         </RadioGroup>
                       </FormControl>
                       <FormMessage />
@@ -120,7 +141,9 @@ const ProjectEvaluation = ({ project, loading }: ProjectEvaluationProps) => {
                   name="feedback"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>コメント</FormLabel>
+                      <FormLabel className="text-xl font-semibold">
+                        コメント
+                      </FormLabel>
                       <FormControl>
                         <Textarea {...field} />
                       </FormControl>

@@ -131,7 +131,7 @@ const MySkillEditPage = () => {
       toast.success("ユーザー情報を更新しました", {
         position: "top-center",
       });
-      // router.push("/answerer");
+      router.push("/answerer");
     }
     if (error) {
       toast.error("ユーザー情報の更新に失敗しました", {
@@ -159,6 +159,7 @@ const MySkillEditPage = () => {
       toast.success("スキル情報を更新しました", {
         position: "top-center",
       });
+      router.push("/answerer");
     }
     if (error) {
       toast.error("スキル情報の更新に失敗しました", {
