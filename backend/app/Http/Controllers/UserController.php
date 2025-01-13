@@ -14,6 +14,12 @@ class UserController extends Controller
         return response()->json(Auth::user(), 200);
     }
 
+    public function getAllUsers()
+    {
+        $users = User::select('user_id', 'name')->get();
+        return response()->json($users, 200);
+    }
+
     // ユーザー情報の更新
     public function updateUser(Request $request)
     {
