@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cookie;
 
 class AuthController extends Controller
 {
@@ -49,7 +50,19 @@ class AuthController extends Controller
             $tokenResult->accessToken->expires_at = Carbon::now()->addMinutes(60);
             $tokenResult->accessToken->save();
 
-            return response()->json(['token' => $token, 'user_id' => Auth::id()], Response::HTTP_OK);
+            $role_id = cookie(
+                'role_id',
+                encrypt($user->role_id),
+                60,
+                '/',
+                null,
+                false,
+                true
+            );
+
+            return response()
+                ->json(['token' => $token, 'user_id' => Auth::id()], Response::HTTP_OK)
+                ->withCookie($role_id);
         }
 
         return response()->json('Can Not Login.', Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -59,7 +72,10 @@ class AuthController extends Controller
     public function signout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
-        return response()->json('Logout Success.', Response::HTTP_OK);
+        $cookie = Cookie::forget('role_id');
+        return response()
+            ->json('Logout Success.', Response::HTTP_OK)
+            ->withCookie($cookie);
     }
 
     // ユーザー情報取得
