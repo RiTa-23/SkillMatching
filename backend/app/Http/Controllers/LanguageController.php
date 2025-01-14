@@ -19,19 +19,24 @@ class LanguageController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'language_id' => 'required|integer|exists:languages,language_id',
-            'level' => 'required|integer|between:1,5',
+            'skills' => 'required|array',
+            'skills.*.language_id' => 'required|integer|exists:languages,language_id',
+            'skills.*.level' => 'required|integer|between:1,5',
         ]);
 
         $user = User::find(Auth::id());
-        $language = Language::find($request->language_id);
-        if (!$language) {
-            return response()->json(['message' => 'Language not found'], 404);
+        $skills = $request->input('skills');
+
+        foreach ($skills as $skill) {
+            $language = Language::find($skill['language_id']);
+            if (!$language) {
+                return response()->json(['message' => 'Language not found'], 404);
+            }
+
+            $user->languages()->syncWithoutDetaching([$language->language_id => ['level' => $skill['level']]]);
         }
 
-        $user->languages()->syncWithoutDetaching([$language->language_id => ['level' => $request->level]]);
-
-        return response()->json($language, 200);
+        return response()->json(['message' => 'Skills updated successfully'], 200);
     }
 
     public function getSkills()

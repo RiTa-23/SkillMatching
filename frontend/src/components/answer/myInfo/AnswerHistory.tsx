@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -7,13 +11,39 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { toast } from "sonner";
+
+import Cookies from "js-cookie";
+import fetcher from "@/lib/fetcher";
+import type { AnswerHistory } from "@/types/Answer";
+import { formatDate } from "@/lib/formatDate";
 
 const AnswerHistory = () => {
-  const dummyData = [
-    { id: 1, name: "株式会社未来技術", date: "2024/12/22" },
-    { id: 2, name: "グローバルソリューションズ株式会社", date: "2024/12/22" },
-    { id: 3, name: "クリエイティブマインズ合同会社", date: "2024/12/22" },
-  ];
+  const [answerHistory, setAnswerHistory] = useState<AnswerHistory[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    const fetchData = async () => {
+      setLoading(true);
+      const { data, error } = await fetcher<AnswerHistory[]>({
+        url: "/answer/history",
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (data) {
+        setAnswerHistory(data);
+      }
+      if (error) {
+        toast.error("回答履歴の取得に失敗しました", { position: "top-center" });
+      }
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <Card className="w-[80%] max-w-[800px] p-2">
@@ -21,22 +51,26 @@ const AnswerHistory = () => {
         <CardTitle>回答履歴</CardTitle>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>会社名</TableHead>
-              <TableHead>回答日</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {dummyData.map((data) => (
-              <TableRow key={data.id}>
-                <TableCell>{data.name}</TableCell>
-                <TableCell>{data.date}</TableCell>
+        {loading ? (
+          <p className="">loading...</p>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>会社名</TableHead>
+                <TableHead>回答日</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {answerHistory.map((answer) => (
+                <TableRow key={answer.company}>
+                  <TableCell>{answer.company}</TableCell>
+                  <TableCell>{formatDate(answer.date)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </CardContent>
     </Card>
   );

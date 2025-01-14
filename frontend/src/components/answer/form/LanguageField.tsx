@@ -26,6 +26,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Slider } from "@/components/ui/slider";
+import { toast } from "sonner";
 import { Check, ChevronsUpDown, Trash2 } from "lucide-react";
 
 import type { SkillsFormValues } from "@/app/answerer/edit/page";
@@ -43,9 +44,11 @@ const levelLabels = ["初心者", "初級者", "中級者", "上級者", "プロ
 
 const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
   const [languages, setLanguages] = useState<Language[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       const token = Cookies.get("token");
       const { data, error } = await fetcher<Language[]>({
         url: "language",
@@ -58,8 +61,9 @@ const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
         setLanguages(data as Language[]);
       }
       if (error) {
-        console.error(error);
+        toast.error("言語の取得に失敗しました", { position: "top-center" });
       }
+      setLoading(false);
     };
 
     fetchData();
@@ -77,10 +81,10 @@ const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
         },
       });
       if (data) {
-        console.log("Skill deleted", data);
+        toast.success("スキルを削除しました", { position: "top-center" });
       }
       if (error) {
-        console.error(error);
+        toast.error("スキルの削除に失敗しました", { position: "top-center" });
       }
     }
   };

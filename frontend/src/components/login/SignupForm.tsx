@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +26,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 import fetcher from "@/lib/fetcher";
 
@@ -39,6 +42,9 @@ const SignupSchema = z.object({
 type SignupFormValues = z.infer<typeof SignupSchema>;
 
 const SignupForm = () => {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(SignupSchema),
     defaultValues: {
@@ -49,17 +55,20 @@ const SignupForm = () => {
   });
 
   const onSubmit = async (values: SignupFormValues) => {
+    setLoading(true);
     const { data, error } = await fetcher({
       url: "signup",
       method: "POST",
       body: values,
     });
     if (data) {
-      console.log("Signup successful:", data);
+      toast.success("登録が完了しました", { position: "top-center" });
+      router.push("/signin");
     }
     if (error) {
-      console.error("Validation errors:", error);
+      toast.error("登録に失敗しました", { position: "top-center" });
     }
+    setLoading(false);
   };
 
   const signout = async () => {
@@ -115,7 +124,9 @@ const SignupForm = () => {
               )}
             />
             <div className="flex justify-center">
-              <Button type="submit">登録</Button>
+              <Button type="submit" className="w-[25%]" disabled={loading}>
+                {loading ? "登録中..." : "登録"}
+              </Button>
             </div>
           </form>
         </Form>
