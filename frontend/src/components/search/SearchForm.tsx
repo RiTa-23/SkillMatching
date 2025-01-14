@@ -3,47 +3,58 @@
 import React, { useState, useEffect } from "react";
 import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import fetcher from "@/lib/fetcher"; // fetcher のインポート
+import fetcher from "@/lib/fetcher";
 
 interface Language {
     language_id: number;
     language_name: string;
 }
 
-interface SearchFormProps {
-    onSearch: (filters: { languageId: string; level: string }) => void;
-
+interface Category {
+    category_id: number;
+    category_name: string;
 }
 
+interface SearchFormProps {
+    onSearch: (filters: {
+        languageId: string;
+        languageLevel: string;
+        categoryId: string;
+        categoryLevel: string;
+    }) => void;
+}
 
 const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
     const [languages, setLanguages] = useState<Language[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [languageId, setLanguageId] = useState<string>("");
-    const [level, setLevel] = useState("");
+    const [languageLevel, setLanguageLevel] = useState<string>("");
+    const [categoryId, setCategoryId] = useState<string>("");
+    const [categoryLevel, setCategoryLevel] = useState<string>("");
 
     useEffect(() => {
-        // APIからlanguagesを取得
         const fetchLanguages = async () => {
             const { data, error } = await fetcher<Language[]>({
-                url: "language", // エンドポイントURL
+                url: "language",
                 method: "GET",
             });
-
-            if (data) {
-                setLanguages(data);
-            }
-
-            if (error) {
-                console.error("Error fetching languages:", error);
-            }
+            if (data) setLanguages(data);
+            if (error) console.error("Error fetching languages:", error);
         };
-
+        const fetchCategories = async () => {
+            const { data, error } = await fetcher<Category[]>({
+                url: "category",
+                method: "GET",
+            });
+            if (data) setCategories(data);
+            if (error) console.error("Error fetching categories:", error);
+        };
         fetchLanguages();
+        fetchCategories();
     }, []);
 
     const handleSubmit = () => {
-        onSearch({ languageId, level });
-        console.log(languageId, level);
+        onSearch({ languageId, languageLevel, categoryId, categoryLevel });
     };
 
     return (
@@ -65,19 +76,44 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
                 </SelectContent>
             </Select>
 
-            {/* レベル入力 */}
+            {/* 言語レベル入力 */}
             <input
                 type="number"
-                placeholder="Level (1-5)"
-                value={level}
-                onChange={(e) => setLevel(e.target.value)}
+                placeholder="言語レベル (1-5)"
+                value={languageLevel}
+                onChange={(e) => setLanguageLevel(e.target.value)}
+                className="border p-2 rounded"
+            />
+
+            {/* カテゴリー選択 */}
+            <Select onValueChange={(value) => setCategoryId(value)}>
+                <SelectTrigger>
+                    <span>
+                        {categories.find((cat) => cat.category_id.toString() === categoryId)?.category_name ||
+                            "カテゴリーを選択"}
+                    </span>
+                </SelectTrigger>
+                <SelectContent>
+                    {categories.map((category) => (
+                        <SelectItem key={category.category_id} value={category.category_id.toString()}>
+                            {category.category_name}
+                        </SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
+
+            {/* カテゴリーレベル入力 */}
+            <input
+                type="number"
+                placeholder="カテゴリーレベル (1-5)"
+                value={categoryLevel}
+                onChange={(e) => setCategoryLevel(e.target.value)}
                 className="border p-2 rounded"
             />
 
             <Button onClick={handleSubmit}>検索</Button>
         </div>
     );
- 
 };
 
 export default SearchForm;
