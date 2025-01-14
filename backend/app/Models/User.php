@@ -7,6 +7,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Role;
 use App\Models\Language;
+use App\Models\ProjectFeedback;
 
 class User extends Authenticatable
 {
@@ -70,6 +71,11 @@ class User extends Authenticatable
     public function languages()
     {
         return $this->belongsToMany(Language::class, 'user_language', 'user_id', 'language_id')->withPivot('level')->withTimestamps();
+    }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(ProjectFeedback::class, 'user_id', 'user_id');
     }
 
     public function projects()
