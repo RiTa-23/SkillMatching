@@ -24,9 +24,11 @@ Route::get('/test', function () {
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/signin', [AuthController::class, 'signin']);
 
+Route::get('/searchhope', [LanguageController::class, 'searchhopeUser']);
 Route::get('/search', [SearchController::class, 'searchUsers']);
 Route::get('/language', [LanguageController::class, 'getLanguages']);
 Route::get('/category', [CategoryController::class, 'getCategory']);
+
 Route::post('/feedback', [ProjectController::class, 'storeFeedback']);
 Route::get('/users', [UserController::class, 'getAllUsers']);
 Route::get('/project', [ProjectController::class, 'getProjects']);
