@@ -25,4 +25,10 @@ class Language extends Model
     {
         return $this->hasMany(Question::class, 'language_id', 'language_id');
     }
+
+    public function hopeUsers()
+    {
+        return $this->belongsToMany(User::class, 'user_hope_language', 'language_id', 'user_id')
+                    ->withTimestamps();
+    }
 }

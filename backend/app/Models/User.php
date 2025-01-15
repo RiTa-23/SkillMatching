@@ -75,6 +75,12 @@ class User extends Authenticatable
         return $this->belongsToMany(Language::class, 'user_language', 'user_id', 'language_id')->withPivot('level')->withTimestamps();
     }
 
+    public function hopeLanguages()
+    {
+        return $this->belongsToMany(Language::class, 'user_hope_language', 'user_id', 'language_id')
+                    ->withTimestamps();
+    }
+    
     public function feedbacks()
     {
         return $this->hasMany(ProjectFeedback::class, 'user_id', 'user_id');
