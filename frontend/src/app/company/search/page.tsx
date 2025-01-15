@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import SearchForm from "@/components/search/SearchForm";
-import SearchResults from "@/components/search/SearchResults";
 import fetcher from "@/lib/fetcher";
 
 interface User {
@@ -15,7 +15,7 @@ interface User {
 }
 
 const SearchPage = () => {
-    const [results, setResults] = useState<User[]>([]);
+    const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -45,35 +45,30 @@ const SearchPage = () => {
             });
 
             if (data) {
-                // 重複削除処理を追加
                 const uniqueResults = Array.from(new Set(data.map(item => item.user_id)))
                     .map(id => data.find(item => item.user_id === id));
 
-                // 整形して状態を更新
-                setResults(
-                    uniqueResults.map(item => ({
-                        user_id: item!.user_id,
-                        name: item!.name,
-                        language_name: item!.language_name,
-                        language_level: item!.language_level,
-                        category_name: item!.category_name,
-                        category_level: item!.category_level,
-                    }))
-                );
+                const formattedResults = uniqueResults.map(item => ({
+                    user_id: item!.user_id,
+                    name: item!.name,
+                    language_name: item!.language_name,
+                    language_level: item!.language_level,
+                    category_name: item!.category_name,
+                    category_level: item!.category_level,
+                }));
+
+                // 検索結果ページにリダイレクト
+                router.push(`/company/search/result?results=${encodeURIComponent(JSON.stringify(formattedResults))}`);
             } else {
                 throw new Error("データが見つかりませんでした");
             }
         } catch (err: any) {
             console.error("検索中にエラーが発生しました:", err);
             setError(err.message || "検索に失敗しました");
-            setResults([]);
         } finally {
             setLoading(false);
         }
     };
-
-
-
 
     return (
         <div className="flex flex-col justify-center items-center h-[90vh]">
@@ -81,7 +76,6 @@ const SearchPage = () => {
             <SearchForm onSearch={handleSearch} />
             {loading && <p className="text-blue-500">Loading...</p>}
             {error && <p className="text-red-500">{error}</p>}
-            <SearchResults results={results} />
         </div>
     );
 };
