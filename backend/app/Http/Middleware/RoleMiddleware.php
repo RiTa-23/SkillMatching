@@ -15,9 +15,9 @@ class RoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, $role)
+    public function handle(Request $request, Closure $next, ...$roles)
     {
-        Log::info('RoleMiddleware handle method called', ['role' => $role]);
+        Log::info('RoleMiddleware handle method called', ['role' => $roles]);
 
         // トークンを取得
         $token = $request->bearerToken();
@@ -37,8 +37,16 @@ class RoleMiddleware
         $abilities = $personalAccessToken->abilities;
 
         // role_id のチェック
-        $expectedRole = 'role_id:' . $role;
-        if (!in_array($expectedRole, $abilities)) {
+        $hasValidRole = false;
+        foreach ($roles as $role) {
+            $expectedRole = 'role_id:' . $role;
+            if (in_array($expectedRole, $abilities)) {
+                $hasValidRole = true;
+                break;
+            }
+        }
+
+        if (!$hasValidRole) {
             return response()->json(['message' => 'Forbidden'], 403);
         }
 

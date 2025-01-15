@@ -23,31 +23,46 @@ Route::post('/signin', [AuthController::class, 'signin']);
 
 Route::get('/search', [LanguageController::class, 'searchUsersByLanguage']);
 Route::get('/language', [LanguageController::class, 'getLanguages']);
-    
+
 Route::middleware(['auth:sanctum'])
     ->group(function () {
-        Route::middleware('role'.':1,4')
-            ->group(function () {
-                Route::get('/admin', function () {
-                    return response()->json(['message' => '管理者のみアクセス可能なページです']);
-                });
-            });
-        Route::get('/guest', function () {
-            return response()->json(['message' => 'ゲストユーザーのみアクセス可能なページです']);
-        })->middleware('role'.':4');
         Route::post('/signout', [AuthController::class, 'signout']);
-        Route::get('/user', [UserController::class, 'getUser']);
         Route::put('/user', [UserController::class, 'updateUser']);
         //Route::get('/language', [LanguageController::class, 'getLanguages']);
         Route::put('/skill', [languageController::class, 'update']);
         Route::get('/skill', [LanguageController::class, 'getSkills']);
-        Route::delete('/skill/{language_id}', [LanguageController::class, 'deleteSkill']);
         Route::get('/company', [CompanyController::class, 'getCompanies']);
+        Route::delete('/skill/{language_id}', [LanguageController::class, 'deleteSkill']);
         Route::get('/question/{company_id}', [QuestionController::class, 'getQuestions']);
         Route::post('/answer', [AnswerController::class, 'saveAnswers']);
         Route::get('/answer/history', [AnswerController::class, 'getAnswerHistory']);
         Route::get('/project', [ProjectController::class, 'getProjects']);
         Route::get('/project/{project_id}', [ProjectController::class, 'getProject']);
         Route::post('/project/{project_id}/evaluation', [ProjectController::class, 'evaluation']);
-    });
 
+        Route::middleware('role' . ':1')
+            ->group(function () {
+                Route::get('/admin', function () {
+                    return response()->json(['message' => '管理者のみアクセス可能なページです']);
+                });
+                Route::get('/user', [UserController::class, 'getUser']);
+            });
+        Route::middleware('role' . ':2')
+            ->group(function () {
+                Route::get('/client', function () {
+                    return response()->json(['message' => 'クライアントのみアクセス可能なページです']);
+                });
+            });
+        Route::middleware('role' . ':3')
+            ->group(function () {
+                Route::get('/employee', function () {
+                    return response()->json(['message' => '社員のみアクセス可能なページです']);
+                });
+            });
+        Route::middleware('role' . ':4')
+            ->group(function () {
+                Route::get('/guest', function () {
+                    return response()->json(['message' => 'ゲストのみアクセス可能なページです']);
+                });
+            });
+    });
