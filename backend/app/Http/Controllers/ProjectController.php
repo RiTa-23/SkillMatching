@@ -47,6 +47,21 @@ class ProjectController extends Controller
         }
     }
 
+    public function storeFeedback(Request $request)
+    {
+        $validated = $request->validate([
+            'project_id' => 'required|exists:projects,project_id',
+            'user_id' => 'required|exists:users,user_id',
+            'role_id' => 'required|exists:roles,role_id',
+            'feedback' => 'nullable|string',
+            'rating' => 'nullable|integer|min:1|max:5',
+        ]);
+
+        $feedback = ProjectFeedback::create($validated);
+
+        return response()->json(['message' => 'Feedback submitted successfully.', 'data' => $feedback], 201);
+    }
+    
     public function evaluation(Request $request, $project_id)
     {
         $user = User::find(Auth::id());

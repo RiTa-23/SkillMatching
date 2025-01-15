@@ -7,14 +7,17 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Role;
 use App\Models\Language;
+use App\Models\Category;
+use App\Models\ProjectFeedback;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class User extends Authenticatable
 {
     use Notifiable;
     use HasApiTokens;
+    use HasFactory;
 
     protected $primaryKey = 'user_id'; // 主キーを指定
-
 
     /**
      * The attributes that are mass assignable.
@@ -72,8 +75,26 @@ class User extends Authenticatable
         return $this->belongsToMany(Language::class, 'user_language', 'user_id', 'language_id')->withPivot('level')->withTimestamps();
     }
 
+    public function hopeLanguages()
+    {
+        return $this->belongsToMany(Language::class, 'user_hope_language', 'user_id', 'language_id')
+                    ->withTimestamps();
+    }
+    
+    public function feedbacks()
+    {
+        return $this->hasMany(ProjectFeedback::class, 'user_id', 'user_id');
+    }
+
     public function projects()
     {
         return $this->belongsToMany(Project::class, 'user_project', 'user_id', 'project_id')->withPivot('feedback', 'rating')->withTimestamps();
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'user_category', 'user_id', 'category_id')
+                    ->withPivot('level') // 中間テーブルの追加フィールド（レベル）
+                    ->withTimestamps(); // タイムスタンプ
     }
 }
