@@ -43,7 +43,7 @@ class AuthController extends Controller
             $user->tokens()->delete();  // 古いトークンを削除
 
             // トークンの生成
-            $tokenResult = $user->createToken('token');
+            $tokenResult = $user->createToken('token', ['role_id:' . $user->role_id]);
             logger('Token created: ', ['token' => $tokenResult]);
             $token = $tokenResult->plainTextToken;
 

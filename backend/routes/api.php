@@ -23,9 +23,18 @@ Route::post('/signin', [AuthController::class, 'signin']);
 
 Route::get('/search', [LanguageController::class, 'searchUsersByLanguage']);
 Route::get('/language', [LanguageController::class, 'getLanguages']);
-
+    
 Route::middleware(['auth:sanctum'])
     ->group(function () {
+        Route::middleware('role'.':1,4')
+            ->group(function () {
+                Route::get('/admin', function () {
+                    return response()->json(['message' => '管理者のみアクセス可能なページです']);
+                });
+            });
+        Route::get('/guest', function () {
+            return response()->json(['message' => 'ゲストユーザーのみアクセス可能なページです']);
+        })->middleware('role'.':4');
         Route::post('/signout', [AuthController::class, 'signout']);
         Route::get('/user', [UserController::class, 'getUser']);
         Route::put('/user', [UserController::class, 'updateUser']);
@@ -41,3 +50,4 @@ Route::middleware(['auth:sanctum'])
         Route::get('/project/{project_id}', [ProjectController::class, 'getProject']);
         Route::post('/project/{project_id}/evaluation', [ProjectController::class, 'evaluation']);
     });
+
