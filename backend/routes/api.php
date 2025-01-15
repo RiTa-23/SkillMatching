@@ -29,7 +29,12 @@ Route::get('/search', [SearchController::class, 'searchUsers']);
 Route::get('/language', [LanguageController::class, 'getLanguages']);
 Route::get('/category', [CategoryController::class, 'getCategory']);
 
+Route::post('/get-related-options', [QuestionController::class, 'getRelatedOptions']);
+Route::post('/questions', [QuestionController::class, 'store']);
+Route::get('/company', [CompanyController::class, 'getCompanies']);
+
 Route::post('/feedback', [ProjectController::class, 'storeFeedback']);
+
 Route::get('/users', [UserController::class, 'getAllUsers']);
 Route::get('/project', [ProjectController::class, 'getProjects']);
 Route::get('/role', [RoleController::class, 'getRole']);
@@ -43,7 +48,7 @@ Route::middleware(['auth:sanctum'])
         Route::put('/skill', [languageController::class, 'update']);
         Route::get('/skill', [LanguageController::class, 'getSkills']);
         Route::delete('/skill/{language_id}', [LanguageController::class, 'deleteSkill']);
-        Route::get('/company', [CompanyController::class, 'getCompanies']);
+        //Route::get('/company', [CompanyController::class, 'getCompanies']);
         Route::get('/question/{company_id}', [QuestionController::class, 'getQuestions']);
         Route::post('/answer', [AnswerController::class, 'saveAnswers']);
         Route::get('/answer/history', [AnswerController::class, 'getAnswerHistory']);
