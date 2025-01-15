@@ -18,19 +18,24 @@ interface Category {
 interface SearchFormProps {
     onSearch: (filters: {
         languageId: string;
-        languageLevel: string;
+        languageLevelMin: string;
+        languageLevelMax: string;
         categoryId: string;
-        categoryLevel: string;
+        categoryLevelMin: string;
+        categoryLevelMax: string;
     }) => void;
 }
+
 
 const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
     const [languages, setLanguages] = useState<Language[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [languageId, setLanguageId] = useState<string>("");
-    const [languageLevel, setLanguageLevel] = useState<string>("");
+    const [languageLevelMin, setLanguageLevelMin] = useState<string>("");
+    const [languageLevelMax, setLanguageLevelMax] = useState<string>("");
     const [categoryId, setCategoryId] = useState<string>("");
-    const [categoryLevel, setCategoryLevel] = useState<string>("");
+    const [categoryLevelMin, setCategoryLevelMin] = useState<string>("");
+    const [categoryLevelMax, setCategoryLevelMax] = useState<string>("");
 
     useEffect(() => {
         const fetchLanguages = async () => {
@@ -54,7 +59,14 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
     }, []);
 
     const handleSubmit = () => {
-        onSearch({ languageId, languageLevel, categoryId, categoryLevel });
+        onSearch({
+            languageId,
+            languageLevelMin,
+            languageLevelMax,
+            categoryId,
+            categoryLevelMin,
+            categoryLevelMax,
+        });
     };
 
     return (
@@ -76,14 +88,23 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
                 </SelectContent>
             </Select>
 
-            {/* 言語レベル入力 */}
-            <input
-                type="number"
-                placeholder="言語レベル (1-5)"
-                value={languageLevel}
-                onChange={(e) => setLanguageLevel(e.target.value)}
-                className="border p-2 rounded"
-            />
+            {/* 言語レベルの範囲入力 */}
+            <div className="flex space-x-2">
+                <input
+                    type="number"
+                    placeholder="言語レベル最小値 (1-5)"
+                    value={languageLevelMin}
+                    onChange={(e) => setLanguageLevelMin(e.target.value)}
+                    className="border p-2 rounded w-1/2"
+                />
+                <input
+                    type="number"
+                    placeholder="言語レベル最大値 (1-5)"
+                    value={languageLevelMax}
+                    onChange={(e) => setLanguageLevelMax(e.target.value)}
+                    className="border p-2 rounded w-1/2"
+                />
+            </div>
 
             {/* カテゴリー選択 */}
             <Select onValueChange={(value) => setCategoryId(value)}>
@@ -102,18 +123,28 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
                 </SelectContent>
             </Select>
 
-            {/* カテゴリーレベル入力 */}
-            <input
-                type="number"
-                placeholder="カテゴリーレベル (1-5)"
-                value={categoryLevel}
-                onChange={(e) => setCategoryLevel(e.target.value)}
-                className="border p-2 rounded"
-            />
+            {/* カテゴリーレベルの範囲入力 */}
+            <div className="flex space-x-2">
+                <input
+                    type="number"
+                    placeholder="カテゴリーレベル最小値 (1-5)"
+                    value={categoryLevelMin}
+                    onChange={(e) => setCategoryLevelMin(e.target.value)}
+                    className="border p-2 rounded w-1/2"
+                />
+                <input
+                    type="number"
+                    placeholder="カテゴリーレベル最大値 (1-5)"
+                    value={categoryLevelMax}
+                    onChange={(e) => setCategoryLevelMax(e.target.value)}
+                    className="border p-2 rounded w-1/2"
+                />
+            </div>
 
             <Button onClick={handleSubmit}>検索</Button>
         </div>
     );
 };
+
 
 export default SearchForm;

@@ -21,9 +21,11 @@ const SearchPage = () => {
 
     const handleSearch = async (filters: {
         languageId: string;
-        languageLevel: string;
+        languageLevelMin: string;
+        languageLevelMax: string;
         categoryId: string;
-        categoryLevel: string;
+        categoryLevelMin: string;
+        categoryLevelMax: string;
     }) => {
         setLoading(true);
         setError(null);
@@ -31,9 +33,11 @@ const SearchPage = () => {
             const queryParams = new URLSearchParams();
 
             if (filters.languageId) queryParams.append("language_id", filters.languageId);
-            if (filters.languageLevel) queryParams.append("language_level", filters.languageLevel);
+            if (filters.languageLevelMin) queryParams.append("language_level_min", filters.languageLevelMin);
+            if (filters.languageLevelMax) queryParams.append("language_level_max", filters.languageLevelMax);
             if (filters.categoryId) queryParams.append("category_id", filters.categoryId);
-            if (filters.categoryLevel) queryParams.append("category_level", filters.categoryLevel);
+            if (filters.categoryLevelMin) queryParams.append("category_level_min", filters.categoryLevelMin);
+            if (filters.categoryLevelMax) queryParams.append("category_level_max", filters.categoryLevelMax);
 
             const { data, error } = await fetcher<any[]>({
                 url: `search?${queryParams.toString()}`,
@@ -41,19 +45,21 @@ const SearchPage = () => {
             });
 
             if (data) {
-                console.log("検索成功: 以下のデータを取得しました", data);
+                // 重複削除処理を追加
+                const uniqueResults = Array.from(new Set(data.map(item => item.user_id)))
+                    .map(id => data.find(item => item.user_id === id));
 
-                // レスポンスを User 型に整形
-                const processedData: User[] = data.map(item => ({
-                    user_id: item.user_id,
-                    name: item.name,
-                    language_name: item.language_name,
-                    language_level: item.language_level || 0, // language_levelが0やundefinedの場合は0を使う
-                    category_name: item.category_name,
-                    category_level: item.category_level || 0, // category_levelが0やundefinedの場合は0を使う
-                }));
-
-                setResults(processedData);
+                // 整形して状態を更新
+                setResults(
+                    uniqueResults.map(item => ({
+                        user_id: item!.user_id,
+                        name: item!.name,
+                        language_name: item!.language_name,
+                        language_level: item!.language_level,
+                        category_name: item!.category_name,
+                        category_level: item!.category_level,
+                    }))
+                );
             } else {
                 throw new Error("データが見つかりませんでした");
             }
@@ -65,6 +71,7 @@ const SearchPage = () => {
             setLoading(false);
         }
     };
+
 
 
 
