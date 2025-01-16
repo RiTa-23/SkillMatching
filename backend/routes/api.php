@@ -59,6 +59,7 @@ Route::middleware(['auth:sanctum'])
         Route::get('/hope-language', [LanguageController::class, 'getHopeLanguages']);
         Route::put('/hope-language', [LanguageController::class, 'updateHopeLanguages']);
         Route::delete('/hope-language/{language_id}', [LanguageController::class, 'deleteHopeLanguage']);
+        Route::get('/project/{project_id}/matching', [ProjectController::class, 'showMatchingUsers']);
 
         Route::middleware('role' . ':1')
             ->group(function () {
