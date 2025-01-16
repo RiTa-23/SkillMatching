@@ -16,7 +16,7 @@ class LanguageController extends Controller
     }
 
     // ユーザーのスキルを更新
-    public function update(Request $request)
+    public function updateSkills(Request $request)
     {
         $request->validate([
             'skills' => 'required|array',
@@ -38,6 +38,7 @@ class LanguageController extends Controller
 
         return response()->json(['message' => 'Skills updated successfully'], 200);
     }
+
 
     public function getSkills()
     {
@@ -86,6 +87,7 @@ class LanguageController extends Controller
         return response()->json($results);
     }
 
+    // ユーザーの希望言語を取得
     public function getHopeLanguages()
     {
         $user = User::find(Auth::id());
@@ -102,5 +104,21 @@ class LanguageController extends Controller
             ];
         });
         return response()->json($hopeLanguages, 200);
+    }
+
+    // ユーザーの希望言語を更新
+    public function updateHopeLanguages(Request $request)
+    {
+        $request->validate([
+            'hope_languages' => 'required|array',
+            'hope_languages.*.language_id' => 'required|integer|exists:languages,language_id',
+        ]);
+
+        $user = User::find(Auth::id());
+        $hopeLanguages = $request->input('hope_languages');
+
+        $user->hopeLanguages()->sync($hopeLanguages);
+
+        return response()->json(['message' => 'Hope languages updated successfully'], 200);
     }
 }

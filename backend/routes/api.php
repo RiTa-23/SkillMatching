@@ -46,7 +46,7 @@ Route::middleware(['auth:sanctum'])
         Route::get('/user', [UserController::class, 'getUser']);
         Route::put('/user', [UserController::class, 'updateUser']);
         //Route::get('/language', [LanguageController::class, 'getLanguages']);
-        Route::put('/skill', [languageController::class, 'update']);
+        Route::put('/skill', [languageController::class, 'updateSkills']);
         Route::get('/skill', [LanguageController::class, 'getSkills']);
         Route::get('/company', [CompanyController::class, 'getCompanies']);
         Route::delete('/skill/{language_id}', [LanguageController::class, 'deleteSkill']);
@@ -57,6 +57,7 @@ Route::middleware(['auth:sanctum'])
         Route::get('/project/{project_id}', [ProjectController::class, 'getProject']);
         Route::post('/project/{project_id}/evaluation', [ProjectController::class, 'evaluation']);
         Route::get('/hope-language', [LanguageController::class, 'getHopeLanguages']);
+        Route::put('/hope-language', [LanguageController::class, 'updateHopeLanguages']);
 
         Route::middleware('role' . ':1')
             ->group(function () {
