@@ -34,7 +34,7 @@ import type { Language } from "@/types/Language";
 import Cookies from "js-cookie";
 import fetcher from "@/lib/fetcher";
 
-type LanguagesFieldProps = {
+type SkillFieldProps = {
   form: UseFormReturn<SkillsFormValues>;
   index: number;
   remove: (index: number) => void;
@@ -42,7 +42,7 @@ type LanguagesFieldProps = {
 
 const levelLabels = ["初心者", "初級者", "中級者", "上級者", "プロ"];
 
-const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
+const SkillField = ({ form, index, remove }: SkillFieldProps) => {
   const [languages, setLanguages] = useState<Language[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -71,7 +71,7 @@ const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
 
   const deleteSkill = async (index: number) => {
     const token = Cookies.get("token");
-    const skillId = form.getValues(`languages.${index}.language_id`);
+    const skillId = form.getValues(`skills.${index}.language_id`);
     if (skillId) {
       const { data, error } = await fetcher({
         url: `skill/${skillId}`,
@@ -98,12 +98,13 @@ const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
               variant="outline"
               role="combobox"
               className="w-[200px] justify-between"
+              disabled={loading}
             >
-              {form.getValues(`languages.${index}.language_id`)
+              {form.getValues(`skills.${index}.language_id`)
                 ? languages.find(
                     (language) =>
                       language.language_id ===
-                      form.getValues(`languages.${index}.language_id`)
+                      form.getValues(`skills.${index}.language_id`)
                   )?.language_name
                 : "言語を選択"}
               <ChevronsUpDown className="opacity-50" />
@@ -121,17 +122,17 @@ const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
                       value={language.language_name}
                       onSelect={async () => {
                         form.setValue(
-                          `languages.${index}.language_id`,
+                          `skills.${index}.language_id`,
                           language.language_id
                         );
-                        form.setValue(`languages.${index}.level`, 1);
-                        await form.trigger(`languages.${index}`);
+                        form.setValue(`skills.${index}.level`, 1);
+                        await form.trigger(`skills.${index}`);
                       }}
                     >
                       {language.language_name}
                       <Check
                         className={`ml-auto ${
-                          form.getValues(`languages.${index}.language_id`) ===
+                          form.getValues(`skills.${index}.language_id`) ===
                           language.language_id
                             ? "opacity-100"
                             : "opacity-0"
@@ -157,7 +158,7 @@ const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
       </div>
       <FormField
         control={form.control}
-        name={`languages.${index}.level`}
+        name={`skills.${index}.level`}
         render={({ field }) => (
           <FormItem>
             <FormLabel>習熟度 (1-5)</FormLabel>
@@ -169,7 +170,7 @@ const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
                   max={5}
                   step={1}
                   onValueChange={(value) =>
-                    form.setValue(`languages.${index}.level`, value[0])
+                    form.setValue(`skills.${index}.level`, value[0])
                   }
                 />
                 <span className="w-1/4 pl-4">
@@ -185,4 +186,4 @@ const LanguagesField = ({ form, index, remove }: LanguagesFieldProps) => {
   );
 };
 
-export default LanguagesField;
+export default SkillField;
