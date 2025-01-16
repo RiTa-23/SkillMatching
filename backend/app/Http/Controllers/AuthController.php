@@ -39,12 +39,12 @@ class AuthController extends Controller
 
         $user = Auth::user();
 
-        // // トークンにカスタムクレームを追加
-        // $customClaims = [
-        //     'role_id' => $user->role_id,
-        // ];
+        // トークンにカスタムクレームを追加
+        $customClaims = [
+            'role_id' => $user->role_id,
+        ];
 
-        // $token = JWTAuth::claims($customClaims)->fromUser($user);
+        $token = JWTAuth::claims($customClaims)->fromUser($user);
 
         return response()->json([
             'message' => 'Login successful',
