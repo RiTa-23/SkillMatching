@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Question;
 use App\Models\Language;
 use App\Models\Category;
+use App\Models\Company;
 
 class QuestionController extends Controller
 {
@@ -24,6 +25,15 @@ class QuestionController extends Controller
                 ];
             });
         return response()->json($questions, 200);
+    }
+
+    public function getAllQuestion()
+    {
+        $questions = Question::select('question_id', 'company_id', 'question_text')->get();
+
+        return response()->json([
+            'data' => $questions,
+        ], 200);
     }
 
     public function store(Request $request)
@@ -82,4 +92,34 @@ class QuestionController extends Controller
         }
     }
 
+    public function getOneQuestion(int $id)
+    {
+        try {
+            // 質問をIDで検索
+            $question = Question::findOrFail($id);
+
+            // 質問データをJSONで返却
+            //dd($question); // ここでデータを確認
+            return response()->json($question);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    // 質問を更新
+    public function update(Request $request, $id)
+    {
+        $question = Question::find($id);
+        if (!$question) {
+            return response()->json(['error' => 'Question not found'], 404);
+        }
+        
+        $question->question_text = $request->input('question_text');
+        $question->save();
+
+        return response()->json($question);
+    }
 }

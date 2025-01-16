@@ -26,11 +26,16 @@ Route::post('/signin', [AuthController::class, 'signin']);
 
 Route::get('/searchhope', [LanguageController::class, 'searchhopeUser']);
 Route::get('/search', [SearchController::class, 'searchUsers']);
+
 Route::get('/language', [LanguageController::class, 'getLanguages']);
 Route::get('/category', [CategoryController::class, 'getCategory']);
 
 Route::post('/get-related-options', [QuestionController::class, 'getRelatedOptions']);
 Route::post('/questions', [QuestionController::class, 'store']);
+Route::get('/get-questions', [QuestionController::class, 'getAllQuestion']);
+Route::get('/get-one-question/{id}', [QuestionController::class, 'getOneQuestion']);
+Route::put('/update-question/{id}', [QuestionController::class, 'update']);
+
 Route::get('/company', [CompanyController::class, 'getCompanies']);
 
 Route::post('/feedback', [ProjectController::class, 'storeFeedback']);
