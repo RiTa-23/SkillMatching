@@ -3,9 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
+use App\Models\Project;
 
 class ProjectsTableSeeder extends Seeder
 {
@@ -16,7 +15,7 @@ class ProjectsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('projects')->insert([
+        $project = Project::insert([
             [
                 'title' => 'システム開発案件',
                 'company_id' => 1, // 事前に companys テーブルに会社を追加しておく必要があります
@@ -48,5 +47,14 @@ class ProjectsTableSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             ],
         ]);
+
+        // プロジェクトと言語を紐付け
+        $project1 = Project::where('title', 'システム開発案件')->first();
+        $project2 = Project::where('title', 'Webサイト制作案件')->first();
+        $project3 = Project::where('title', 'スマホアプリ開発案件')->first();
+
+        $project1->languages()->attach([1, 2]);
+        $project2->languages()->attach([2, 3]);
+        $project3->languages()->attach([1, 3]);
     }
 }
