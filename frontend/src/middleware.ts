@@ -1,10 +1,14 @@
-// middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // 保護されたルートと許可されたrole_idのマッピング
 const protectedRoutes: Record<string, number[]> = {
-  "/:path*": [1, 2, 3, 4],
+  "/answerer": [3, 4],
+  "/answerer/company/:path*": [3, 4],
+  "/answerer/edit/:path*": [3, 4],
+  "/answerer/project/:path*": [3],
+  "/company": [2],
+  "/company/:path*": [2],
 };
 
 export async function middleware(req: NextRequest) {
@@ -12,6 +16,12 @@ export async function middleware(req: NextRequest) {
 
   if (!token) {
     // トークンがない場合はログインページにリダイレクト
+    return NextResponse.redirect(new URL("/signin", req.url));
+  }
+
+  // トークンの認証が切れている場合はログインページにリダイレクト
+  const payload = JSON.parse(atob(token.value.split(".")[1]));
+  if (Date.now() >= payload.exp * 1000) {
     return NextResponse.redirect(new URL("/signin", req.url));
   }
 
@@ -34,7 +44,6 @@ export async function middleware(req: NextRequest) {
     }
 
     if (allowedRoles) {
-
       // ユーザーのrole_idが許可されていない場合は403ページにリダイレクト
       if (!allowedRoles.includes(userRole)) {
         return NextResponse.redirect(new URL("/403", req.url));
