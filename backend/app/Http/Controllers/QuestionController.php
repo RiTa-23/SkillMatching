@@ -112,14 +112,21 @@ class QuestionController extends Controller
     // 質問を更新
     public function update(Request $request, $id)
     {
-        $question = Question::find($id);
-        if (!$question) {
-            return response()->json(['error' => 'Question not found'], 404);
-        }
-        
-        $question->question_text = $request->input('question_text');
-        $question->save();
+        $validated = $request->validate([
+            'question_text' => 'required|string|max:1000',
+            'language_id' => 'nullable|exists:languages,language_id',
+            'category_id' => 'nullable|exists:categories,category_id',
+        ]);
 
-        return response()->json($question);
+        $question = Question::findOrFail($id);
+
+        // 質問の更新
+        $question->update([
+            'question_text' => $validated['question_text'],
+            'language_id' => $validated['language_id'],
+            'category_id' => $validated['category_id'],
+        ]);
+
+        return response()->json(['message' => 'Question updated successfully', 'data' => $question], 200);
     }
 }

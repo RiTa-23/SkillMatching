@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation"; // useParams をインポート
+import { useParams } from "next/navigation";
 import fetcher from "@/lib/fetcher";
 
 type Question = {
@@ -14,34 +14,37 @@ type Question = {
     updated_at: string;
 };
 
+type Language = { language_id: number; language_name: string };
+type Category = { category_id: number; category_name: string };
+type Company = { company_id: number; company_name: string };
+
 const QuestionDetail = () => {
-    const { id } = useParams(); // useParams で id を取得
+    const { id } = useParams();
     const [question, setQuestion] = useState<Question | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [languages, setLanguages] = useState<Language[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [companies, setCompanies] = useState<Company[]>([]);
 
     useEffect(() => {
-        if (!id) return; // id がない場合は処理しない
+        if (!id) return;
 
         const numericId = parseInt(Array.isArray(id) ? id[0] : id, 10);
-        // 配列チェックを外して、id を直接数値に変換
-        console.log(numericId);
-        console.log(typeof numericId);
+
         const fetchQuestion = async () => {
             try {
                 const response = await fetcher<{
-                    data: Question[];
+                    data: Question;
                     error: unknown | null;
                 }>({
                     url: `/get-one-question/${numericId}`,
                     method: "GET",
                 });
-
-                console.log(response.data); // レスポンスをログ出力
-
+                console.log(response.data);
                 if (response?.data) {
-                    setQuestion(response.data); // データがある場合は最初の要素をセット
+                    setQuestion(response.data);
                 } else {
-                    setQuestion(null); // データが見つからない場合はnullをセット
+                    setQuestion(null);
                     throw new Error("Question not found");
                 }
             } catch (error) {
@@ -50,8 +53,39 @@ const QuestionDetail = () => {
             }
         };
 
+        const fetchData = async () => {
+            try {
+                const [companiesRes, languagesRes, categoriesRes] = await Promise.all([
+                    fetcher<Company[]>({
+                        url: "/company",
+                        method: "GET",
+                    }),
+                    fetcher<Language[]>({
+                        url: "/language",
+                        method: "GET",
+                    }),
+                    fetcher<Category[]>({
+                        url: "/category",
+                        method: "GET",
+                    }),
+                ]);
+
+                // 各レスポンスのデータ部分にアクセス
+                setCompanies(companiesRes.data || []);
+                setLanguages(languagesRes.data || []);
+                setCategories(categoriesRes.data || []);
+
+                console.log('Companies:', companiesRes.data);
+                console.log('Languages:', languagesRes.data);
+                console.log('Categories:', categoriesRes.data);
+            } catch (error) {
+                console.error("Failed to fetch data:", error);
+            }
+        };
+
+        fetchData();
         fetchQuestion();
-    }, [id]); // id が変更された場合にデータを再取得
+    }, [id]);
 
     if (error) {
         return <p>Error: {error}</p>;
@@ -60,6 +94,25 @@ const QuestionDetail = () => {
     if (!question) {
         return <p>Loading...</p>;
     }
+
+    const getNameById = <T extends { [key: string]: any }>(
+        items: T[] | { data: T[] },
+        idKey: keyof T,
+        nameKey: keyof T,
+        id: number | null
+    ) => {
+        if (!Array.isArray(items)) {
+            console.error("Expected items to be an array, but got:", items);
+            return "Invalid data";
+        }
+        if (id === null) return "None";
+        const item = items.find((item) => item[idKey] === id);
+        return item ? item[nameKey] : `ID: ${id}`;
+    };
+
+    const companyName = getNameById(companies, "company_id", "company_name", question.company_id);
+    const categoryName = getNameById(categories, "category_id", "category_name", question.category_id);
+    const languageName = getNameById(languages, "language_id", "language_name", question.language_id);
 
     return (
         <div
@@ -74,13 +127,16 @@ const QuestionDetail = () => {
             }}
         >
             <p><strong>Question ID:</strong> {question.question_id}</p>
-            <p><strong>Company ID:</strong> {question.company_id}</p>
-            <p><strong>Category ID:</strong> {question.category_id || "None"}</p>
-            <p><strong>Language ID:</strong> {question.language_id || "None"}</p>
+            <p><strong>Company:</strong> {companyName}</p>
+            <p><strong>Category:</strong> {categoryName}</p>
+            <p><strong>Language:</strong> {languageName}</p>
             <p><strong>Question Text:</strong> {question.question_text}</p>
             <p><strong>Created At:</strong> {new Date(question.created_at).toLocaleString()}</p>
             <p><strong>Updated At:</strong> {new Date(question.updated_at).toLocaleString()}</p>
-            <a href={`/company/question/${question.question_id}/edit`} style={{ color: "blue", textDecoration: "underline" }}>
+            <a
+                href={`/company/question/${question.question_id}/edit`}
+                style={{ color: "blue", textDecoration: "underline" }}
+            >
                 Edit Question
             </a>
         </div>
