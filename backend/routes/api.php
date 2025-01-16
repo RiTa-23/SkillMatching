@@ -56,6 +56,7 @@ Route::middleware(['auth:sanctum'])
         //Route::get('/project', [ProjectController::class, 'getProjects']);
         Route::get('/project/{project_id}', [ProjectController::class, 'getProject']);
         Route::post('/project/{project_id}/evaluation', [ProjectController::class, 'evaluation']);
+        Route::get('/hope-language', [LanguageController::class, 'getHopeLanguages']);
 
         Route::middleware('role' . ':1')
             ->group(function () {

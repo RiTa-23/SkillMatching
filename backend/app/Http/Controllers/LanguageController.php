@@ -74,7 +74,7 @@ class LanguageController extends Controller
     public function searchhopeUser(Request $request)
     {
         $languageId = $request->input('language_id');
-        
+
         $language = Language::find($languageId);
 
         if (!$language) {
@@ -86,4 +86,21 @@ class LanguageController extends Controller
         return response()->json($results);
     }
 
+    public function getHopeLanguages()
+    {
+        $user = User::find(Auth::id());
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        $hopeLanguages = $user->hopeLanguages()->get()->map(function ($language) {
+            return [
+                'language_id' => $language->language_id,
+                'language_name' => $language->language_name,
+                'created_at' => $language->pivot->created_at,
+                'updated_at' => $language->pivot->updated_at,
+            ];
+        });
+        return response()->json($hopeLanguages, 200);
+    }
 }

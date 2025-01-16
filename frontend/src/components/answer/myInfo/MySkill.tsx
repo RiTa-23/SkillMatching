@@ -77,9 +77,7 @@ const MySkill = () => {
       setHopeLanguages(data as HopeLanguage[]);
     }
     if (error) {
-      toast.error("希望言語の取得に失敗しました", {
-        position: "top-center",
-      });
+      toast.error("希望言語の取得に失敗しました", { position: "top-center" });
     }
     setLoading(false);
   };
@@ -88,12 +86,7 @@ const MySkill = () => {
     const token = Cookies.get("token");
     getProfile(token);
     getSkills(token);
-    // getHopeLanguages(token);
-    setHopeLanguages([
-      { language_id: 1, language_name: "Python" },
-      { language_id: 2, language_name: "PHP" },
-      { language_id: 3, language_name: "JavaScript" },
-    ]);
+    getHopeLanguages(token);
   }, []);
 
   return (
