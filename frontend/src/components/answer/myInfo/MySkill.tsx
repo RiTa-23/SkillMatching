@@ -74,6 +74,7 @@ const MySkill = () => {
       },
     });
     if (data) {
+      console.log("HopeLanguages", data);
       setHopeLanguages(data as HopeLanguage[]);
     }
     if (error) {

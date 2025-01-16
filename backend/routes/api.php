@@ -58,6 +58,7 @@ Route::middleware(['auth:sanctum'])
         Route::post('/project/{project_id}/evaluation', [ProjectController::class, 'evaluation']);
         Route::get('/hope-language', [LanguageController::class, 'getHopeLanguages']);
         Route::put('/hope-language', [LanguageController::class, 'updateHopeLanguages']);
+        Route::delete('/hope-language/{language_id}', [LanguageController::class, 'deleteHopeLanguage']);
 
         Route::middleware('role' . ':1')
             ->group(function () {

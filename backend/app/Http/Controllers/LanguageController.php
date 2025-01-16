@@ -121,4 +121,18 @@ class LanguageController extends Controller
 
         return response()->json(['message' => 'Hope languages updated successfully'], 200);
     }
+
+    // ユーザーの希望言語を削除
+    public function deleteHopeLanguage($language_id)
+    {
+        $user = User::find(Auth::id());
+        $language = Language::find($language_id);
+        if (!$language) {
+            return response()->json(['message' => 'Language not found'], 404);
+        }
+
+        $user->hopeLanguages()->detach($language->language_id);
+
+        return response()->json($language, 200);
+    }
 }
