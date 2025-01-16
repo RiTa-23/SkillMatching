@@ -30,7 +30,12 @@ Route::get('/search', [SearchController::class, 'searchUsers']);
 Route::get('/language', [LanguageController::class, 'getLanguages']);
 Route::get('/category', [CategoryController::class, 'getCategory']);
 
+Route::post('/get-related-options', [QuestionController::class, 'getRelatedOptions']);
+Route::post('/questions', [QuestionController::class, 'store']);
+Route::get('/company', [CompanyController::class, 'getCompanies']);
+
 Route::post('/feedback', [ProjectController::class, 'storeFeedback']);
+
 Route::get('/users', [UserController::class, 'getAllUsers']);
 Route::get('/project', [ProjectController::class, 'getProjects']);
 Route::get('/role', [RoleController::class, 'getRole']);

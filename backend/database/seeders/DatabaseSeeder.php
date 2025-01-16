@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             UserLanguageSeeder::class,     // 5. UserLanguageSeeder
             UserCategorySeeder::class,     // 6. UserCategorySeeder
             UserHopeLanguageSeeder::class,
+            CompaniesTableSeeder::class,
         ]);
 
         $this->command->info('全てのシーディングが完了しました！');
