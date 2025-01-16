@@ -23,6 +23,7 @@ Route::get('/test', function () {
 
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/signin', [AuthController::class, 'signin']);
+Route::get('/checktoken', [AuthController::class, 'checkToken']);
 
 Route::get('/searchhope', [LanguageController::class, 'searchhopeUser']);
 Route::get('/search', [SearchController::class, 'searchUsers']);
@@ -37,6 +38,7 @@ Route::get('/role', [RoleController::class, 'getRole']);
 Route::middleware(['auth:sanctum'])
     ->group(function () {
         Route::post('/signout', [AuthController::class, 'signout']);
+        Route::get('/user', [UserController::class, 'getUser']);
         Route::put('/user', [UserController::class, 'updateUser']);
         //Route::get('/language', [LanguageController::class, 'getLanguages']);
         Route::put('/skill', [languageController::class, 'update']);
@@ -55,7 +57,6 @@ Route::middleware(['auth:sanctum'])
                 Route::get('/admin', function () {
                     return response()->json(['message' => '管理者のみアクセス可能なページです']);
                 });
-                Route::get('/user', [UserController::class, 'getUser']);
             });
         Route::middleware('role' . ':2')
             ->group(function () {

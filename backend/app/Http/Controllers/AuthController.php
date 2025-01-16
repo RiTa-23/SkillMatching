@@ -7,9 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Crypt;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -21,41 +19,38 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'role_id' => $request->role_id,
         ]);
-        $json = [
-            'data' => $user
-        ];
-        return response()->json($json, Response::HTTP_OK);
+
+        $token = JWTAuth::fromUser($user);
+
+        return response()->json([
+            'message' => 'Registration successful',
+            'token' => $token
+        ]);
     }
 
     // ログイン処理
     public function signin(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required'],
-            'password' => ['required'],
-        ]);
+        $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
-            $user = User::where('email', $request->email)->first();
-            logger('User fetched: ', ['user' => $user]);
-            logger('Auth user: ', ['auth_user' => Auth::user()]);
-
-            $user->tokens()->delete();  // 古いトークンを削除
-
-            // トークンの生成
-            $tokenResult = $user->createToken('token', ['role_id:' . $user->role_id]);
-            logger('Token created: ', ['token' => $tokenResult]);
-            $token = $tokenResult->plainTextToken;
-
-            // トークンの有効期限を設定
-            $tokenResult->accessToken->expires_at = Carbon::now()->addMinutes(60);
-            $tokenResult->accessToken->save();
-
-            return response()
-                ->json(['token' => $token, 'user_id' => Auth::id()], Response::HTTP_OK);
+        if (! $token = JWTAuth::attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        return response()->json('Can Not Login.', Response::HTTP_INTERNAL_SERVER_ERROR);
+        $user = Auth::user();
+
+        // // トークンにカスタムクレームを追加
+        // $customClaims = [
+        //     'role_id' => $user->role_id,
+        // ];
+
+        // $token = JWTAuth::claims($customClaims)->fromUser($user);
+
+        return response()->json([
+            'message' => 'Login successful',
+            'user' => $user,
+            'token' => $token
+        ]);
     }
 
     // ログアウト
@@ -70,5 +65,16 @@ class AuthController extends Controller
     public function getUser(Request $request)
     {
         return response()->json($request->user(), Response::HTTP_OK);
+    }
+
+    // トークンのrole_idを確認
+    public function checkToken(Request $request)
+    {
+        $token = $request->bearerToken();
+        $payload = JWTAuth::setToken($token)->getPayload();
+
+        return response()->json([
+            'payload' => $payload,
+        ]);
     }
 }

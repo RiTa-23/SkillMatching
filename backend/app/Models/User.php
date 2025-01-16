@@ -10,8 +10,9 @@ use App\Models\Language;
 use App\Models\Category;
 use App\Models\ProjectFeedback;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends  Authenticatable implements JWTSubject
 {
     use Notifiable;
     use HasApiTokens;
@@ -65,6 +66,18 @@ class User extends Authenticatable
         return 'user_id'; // 認証時に使用するフィールドを指定
     }
 
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [
+            'role_id' => $this->role_id,
+        ];
+    }
+
     public function roles()
     {
         return $this->belongsTo(Role::class);
@@ -78,9 +91,9 @@ class User extends Authenticatable
     public function hopeLanguages()
     {
         return $this->belongsToMany(Language::class, 'user_hope_language', 'user_id', 'language_id')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
-    
+
     public function feedbacks()
     {
         return $this->hasMany(ProjectFeedback::class, 'user_id', 'user_id');
@@ -94,7 +107,7 @@ class User extends Authenticatable
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'user_category', 'user_id', 'category_id')
-                    ->withPivot('level') // 中間テーブルの追加フィールド（レベル）
-                    ->withTimestamps(); // タイムスタンプ
+            ->withPivot('level') // 中間テーブルの追加フィールド（レベル）
+            ->withTimestamps(); // タイムスタンプ
     }
 }
