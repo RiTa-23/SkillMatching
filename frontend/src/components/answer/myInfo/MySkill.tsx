@@ -14,6 +14,8 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { Pencil } from "lucide-react";
 
+import { formatDate } from "@/lib/formatDate";
+
 import Cookies from "js-cookie";
 import fetcher from "@/lib/fetcher";
 import type { User } from "@/types/user";
@@ -108,7 +110,7 @@ const MySkill = () => {
                 </TableRow>
                 <TableRow>
                   <TableCell>生年月日</TableCell>
-                  <TableCell>{user?.birthday}</TableCell>
+                  <TableCell>{user?.birthday ? formatDate(user.birthday) : ""}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>メールアドレス</TableCell>

@@ -272,7 +272,7 @@ const MySkillEditPage = () => {
                     <FormItem>
                       <FormLabel>生年月日</FormLabel>
                       <FormControl>
-                        <Input type="date" placeholder="生年月日" {...field} />
+                        <Input type="date" placeholder="生年月日" {...field} value={field.value ?? ""} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

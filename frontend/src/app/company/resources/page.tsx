@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import SearchForm from "@/components/search/SearchForm";
-import Link from 'next/link';
-import { Card, CardContent, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import Link from "next/link";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 interface Resource {
   id: number;
@@ -59,9 +59,15 @@ const Page = () => {
   const filteredData = mockData.filter((item) => {
     return (
       (!filters.language || item.language === filters.language) &&
-      (!filters.proficiency || (levels.indexOf(item.proficiency) >= filters.proficiency[0] && levels.indexOf(item.proficiency) <= filters.proficiency[1])) &&
-      (!filters.communication || (parseInt(item.communication) >= filters.communication[0] && parseInt(item.communication) <= filters.communication[1])) &&
-      (!filters.problemSolving || (parseInt(item.problemSolving) >= filters.problemSolving[0] && parseInt(item.problemSolving) <= filters.problemSolving[1]))
+      (!filters.proficiency ||
+        (levels.indexOf(item.proficiency) >= filters.proficiency[0] &&
+          levels.indexOf(item.proficiency) <= filters.proficiency[1])) &&
+      (!filters.communication ||
+        (parseInt(item.communication) >= filters.communication[0] &&
+          parseInt(item.communication) <= filters.communication[1])) &&
+      (!filters.problemSolving ||
+        (parseInt(item.problemSolving) >= filters.problemSolving[0] &&
+          parseInt(item.problemSolving) <= filters.problemSolving[1]))
     );
   });
 
@@ -77,16 +83,19 @@ const Page = () => {
   };
 
   return (
-    <div>
-      <Card style={{ maxWidth: '800px', margin: '0 auto' }}>
-        <CardTitle>人材検索</CardTitle><br></br>
-        <CardContent><SearchForm onSearch={handleSearch} /></CardContent>
+    <div className="flex flex-col items-center">
+      <Card className="w-[80%] max-w-[800px] p-6 mt-6">
+        <CardTitle>人材検索</CardTitle>
+        <br></br>
+        <CardContent className="flex items-center justify-center">
+          <SearchForm onSearch={handleSearch} />
+        </CardContent>
       </Card>
-      
-      <div className="mt-6">
+
+      <div className="w-[80%] max-w-[800px] mt-6">
         {paginatedData.map((resource) => (
           <Link key={resource.id} href={`/company/resources/${resource.id}`}>
-            <Card style={{ maxWidth: '800px', margin: '0 auto', marginBottom: '20px' }}>
+            <Card className="cursor-pointer hover:shadow-lg transition duration-300 p-4 mb-4">
               <CardContent>
                 <h6>{resource.name}</h6>
                 <p>{resource.language}</p>
@@ -109,7 +118,9 @@ const Page = () => {
           {currentPage} / {Math.ceil(filteredData.length / resultsPerPage)}
         </span>
         <Button
-          disabled={currentPage === Math.ceil(filteredData.length / resultsPerPage)}
+          disabled={
+            currentPage === Math.ceil(filteredData.length / resultsPerPage)
+          }
           onClick={() => setCurrentPage((prev) => prev + 1)}
         >
           次へ

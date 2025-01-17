@@ -1,5 +1,5 @@
 import Header from "@/components/header/Header";
-import { answererUrls } from "@/components/header/urls";
+import { companyUrls } from "@/components/header/CompanyUrls";
 
 export default function RootLayout({
   children,
@@ -8,7 +8,7 @@ export default function RootLayout({
 }>) {
   return (
     <div>
-      <Header urls={answererUrls} />
+      <Header urls={companyUrls} />
       <main className="w-full">{children}</main>
     </div>
   );
