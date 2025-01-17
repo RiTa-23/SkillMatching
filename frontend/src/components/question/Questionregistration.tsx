@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import fetcher from "@/lib/fetcher";
@@ -21,6 +22,7 @@ const QuestionForm: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
   const [questionText, setQuestionText] = useState("");
+  const router = useRouter();
 
   // 初期ロードで会社、技術、カテゴリーを取得
   useEffect(() => {
@@ -107,6 +109,7 @@ const QuestionForm: React.FC = () => {
         setSelectedCompany("");
         setQuestionText("");
       }
+      router.push("/company/question");
     } catch (error) {
       console.error("Error submitting question:", error);
     }

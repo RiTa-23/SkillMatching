@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import fetcher from "@/lib/fetcher";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 // 型定義
 type Question = {
@@ -21,13 +24,16 @@ const QuestionsList = () => {
   const [error, setError] = useState<string | null>(null);
   const [companies, setCompanies] = useState<Company[]>([]); // 会社のリスト
   const [selectedCompany, setSelectedCompany] = useState<number | null>(null); // 選択された会社ID
+  const router = useRouter();
 
   useEffect(() => {
     // 質問データと会社データの取得
     const fetchData = async () => {
       try {
         // 会社リストの取得
-        const companiesRes = await fetcher<{ company_id: number; company_name: string }[]>({
+        const companiesRes = await fetcher<
+          { company_id: number; company_name: string }[]
+        >({
           url: "/company",
           method: "GET",
         });
@@ -76,7 +82,19 @@ const QuestionsList = () => {
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>Questions List</h1>
+      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>
+        Questions List
+      </h1>
+      <Button
+        type="button"
+        className="w-1/2 max-w-[100px]"
+        onClick={() => {
+          router.push("/company/question/registration");
+        }}
+      >
+        <Plus />
+        追加
+      </Button>
 
       {/* 会社選択 */}
       <div style={{ marginBottom: "20px", textAlign: "center" }}>
