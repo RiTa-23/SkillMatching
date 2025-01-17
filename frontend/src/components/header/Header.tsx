@@ -14,7 +14,7 @@ interface HeaderProps {
 const Header = ({ urls }: HeaderProps) => {
   return (
     <header className="flex justify-between items-center bg-main-600 h-[10vh]">
-      <Link href="/" passHref>
+      <Link href="/signin" passHref>
         <Image
           src="/logo.png"
           alt="logo"

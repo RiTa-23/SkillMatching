@@ -17,7 +17,7 @@ import fetcher from "@/lib/fetcher";
 import type { MatchingUsers } from "@/types/Matching";
 
 interface MatchingDialogProps {
-  projectId: string;
+  projectId: number;
 }
 
 const MatchingDialog = (props: MatchingDialogProps) => {
@@ -58,7 +58,11 @@ const MatchingDialog = (props: MatchingDialogProps) => {
           </DialogTitle>
           <DialogDescription>
             {matchingUsers?.matching_users.map((user) => (
-              <Badge key={user.user.user_id} className="mr-2 mb-2">
+              <Badge
+                key={user.user.user_id}
+                variant="outline"
+                className="text-lg mr-4 mb-4 py-2 px-6 "
+              >
                 {user.user.name}
               </Badge>
             ))}
