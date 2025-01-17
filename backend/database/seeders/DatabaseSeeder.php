@@ -16,10 +16,16 @@ class DatabaseSeeder extends Seeder
             LanguagesTableSeeder::class,   // 3. LanguagesTableSeeder
             UsersTableSeeder::class,       // 2. UsersTableSeeder
             CategoriesTableSeeder::class,  // 4. CategoriesTableSeeder
-            UserCategorySeeder::class,     // 5. UserCategorySeeder
-            CompaniesTableSeeder::class,   // 6. CompaniesTableSeeder
-            ProjectsTableSeeder::class,    // 7. ProjectsTableSeeder
-            QuestionsTableSeeder::class,   // 8. QuestionsTableSeeder
+            UserLanguageSeeder::class,     // 5. UserLanguageSeeder
+            UserCategorySeeder::class,     // 6. UserCategorySeeder
+            UserHopeLanguageSeeder::class,
+            CompaniesTableSeeder::class,
+            QuestionsTableSeeder::class,
+            ProjectsTableSeeder::class,
+            //ProjectUserSeeder::class,
+            UserCategorySeeder::class,
+            UserlanguageSeeder::class,
+            UserHopeLanguageSeeder::class,
         ]);
 
         $this->command->info('全てのシーディングが完了しました！');

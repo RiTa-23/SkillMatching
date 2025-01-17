@@ -14,6 +14,7 @@ const protectedRoutes: Record<string, number[]> = {
 export async function middleware(req: NextRequest) {
   const token = req.cookies.get("token"); // Cookieからトークンを取得
 
+
   if (!token) {
     // トークンがない場合はログインページにリダイレクト
     return NextResponse.redirect(new URL("/signin", req.url));
