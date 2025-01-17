@@ -6,9 +6,31 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Project;
+use App\Services\MatchingService;
 
 class ProjectController extends Controller
 {
+    protected $matchingService;
+
+    public function __construct(MatchingService $matchingService)
+    {
+        $this->matchingService = $matchingService;
+    }
+
+    /**
+     * 指定されたプロジェクトのマッチング候補を表示
+     */
+    public function showMatchingUsers($projectId)
+    {
+        $project = Project::with('languages')->findOrFail($projectId);
+        $matchingUsers = $this->matchingService->getMatchingUsersForProject($project);
+
+        return response()->json([
+            'project' => $project,
+            'matching_users' => $matchingUsers,
+        ]);
+    }
+
     public function getProjects()
     {
         $projects = Project::get()
@@ -61,7 +83,7 @@ class ProjectController extends Controller
 
         return response()->json(['message' => 'Feedback submitted successfully.', 'data' => $feedback], 201);
     }
-    
+
     public function evaluation(Request $request, $project_id)
     {
         $user = User::find(Auth::id());

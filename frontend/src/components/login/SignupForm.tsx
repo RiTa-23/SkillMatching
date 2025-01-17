@@ -136,7 +136,7 @@ const SignupForm = () => {
           ログインはこちら
         </Link>
       </CardFooter>
-      <Button onClick={signout}>ログアウト</Button>
+      {/* <Button onClick={signout}>ログアウト</Button> */}
     </Card>
   );
 };

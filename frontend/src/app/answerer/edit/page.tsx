@@ -33,7 +33,7 @@ import type { HopeLanguage } from "@/types/Language";
 
 const SkillsSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  birthday: z.string().min(1, "Birthday is required"),
+  birthday: z.string().min(1, "Birthday is required").nullable(),
   email: z.string().email("Invalid email"),
   skills: z.array(
     z.object({
@@ -117,7 +117,7 @@ const MySkillEditPage = () => {
         });
       }
       if (hopeLanguageError) {
-        toast.error("希望言語の取得に失敗しました", {
+        toast.error("希望技術の取得に失敗しました", {
           position: "top-center",
         });
       }
@@ -220,13 +220,13 @@ const MySkillEditPage = () => {
       body: { hope_languages: values.hope_languages },
     });
     if (data) {
-      toast.success("希望言語を更新しました", {
+      toast.success("希望技術を更新しました", {
         position: "top-center",
       });
       router.push("/answerer");
     }
     if (error) {
-      toast.error("希望言語の更新に失敗しました", {
+      toast.error("希望技術の更新に失敗しました", {
         position: "top-center",
       });
     }
@@ -272,7 +272,7 @@ const MySkillEditPage = () => {
                     <FormItem>
                       <FormLabel>生年月日</FormLabel>
                       <FormControl>
-                        <Input type="date" placeholder="生年月日" {...field} />
+                        <Input type="date" placeholder="生年月日" {...field} value={field.value ?? ""} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

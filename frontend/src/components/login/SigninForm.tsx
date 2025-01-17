@@ -79,6 +79,7 @@ const SigninForm = () => {
     if (data) {
       Cookies.set("token", (data as { token: string }).token);
       console.log("Login successful:", data);
+      router.push(`/company/project`);
     }
     if (error) {
       console.error("Validation errors:", error);
@@ -178,7 +179,11 @@ const SigninForm = () => {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input placeholder="password" {...field} />
+                        <Input
+                          type="password"
+                          placeholder="password"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

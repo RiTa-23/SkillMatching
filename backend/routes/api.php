@@ -27,11 +27,16 @@ Route::get('/checktoken', [AuthController::class, 'checkToken']);
 
 Route::get('/searchhope', [LanguageController::class, 'searchhopeUser']);
 Route::get('/search', [SearchController::class, 'searchUsers']);
+
 Route::get('/language', [LanguageController::class, 'getLanguages']);
 Route::get('/category', [CategoryController::class, 'getCategory']);
 
 Route::post('/get-related-options', [QuestionController::class, 'getRelatedOptions']);
 Route::post('/questions', [QuestionController::class, 'store']);
+Route::get('/get-questions', [QuestionController::class, 'getAllQuestion']);
+Route::get('/get-one-question/{id}', [QuestionController::class, 'getOneQuestion']);
+Route::put('/update-question/{id}', [QuestionController::class, 'update']);
+
 Route::get('/company', [CompanyController::class, 'getCompanies']);
 
 Route::post('/feedback', [ProjectController::class, 'storeFeedback']);
@@ -59,6 +64,7 @@ Route::middleware(['auth:sanctum'])
         Route::get('/hope-language', [LanguageController::class, 'getHopeLanguages']);
         Route::put('/hope-language', [LanguageController::class, 'updateHopeLanguages']);
         Route::delete('/hope-language/{language_id}', [LanguageController::class, 'deleteHopeLanguage']);
+        Route::get('/project/{project_id}/matching', [ProjectController::class, 'showMatchingUsers']);
 
         Route::middleware('role' . ':1')
             ->group(function () {

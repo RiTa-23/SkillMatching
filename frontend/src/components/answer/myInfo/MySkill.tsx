@@ -14,6 +14,8 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { Pencil } from "lucide-react";
 
+import { formatDate } from "@/lib/formatDate";
+
 import Cookies from "js-cookie";
 import fetcher from "@/lib/fetcher";
 import type { User } from "@/types/user";
@@ -78,7 +80,7 @@ const MySkill = () => {
       setHopeLanguages(data as HopeLanguage[]);
     }
     if (error) {
-      toast.error("希望言語の取得に失敗しました", { position: "top-center" });
+      toast.error("希望技術の取得に失敗しました", { position: "top-center" });
     }
     setLoading(false);
   };
@@ -108,7 +110,7 @@ const MySkill = () => {
                 </TableRow>
                 <TableRow>
                   <TableCell>生年月日</TableCell>
-                  <TableCell>{user?.birthday}</TableCell>
+                  <TableCell>{user?.birthday ? formatDate(user.birthday) : ""}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>メールアドレス</TableCell>
@@ -118,7 +120,7 @@ const MySkill = () => {
               </TableBody>
             </Table>
             <div className="p-4">
-              <p>使用可能言語</p>
+              <p>使用可能技術</p>
               <div className="space-x-2 mt-4">
                 {skills?.map((skill) => (
                   <HoverCard key={skill.language_id}>
@@ -139,7 +141,7 @@ const MySkill = () => {
               </div>
             </div>
             <div className="p-4">
-              <p>希望言語</p>
+              <p>希望技術</p>
               <div className="space-x-2 mt-4">
                 {hopeLanguages.map((language) => (
                   <Badge

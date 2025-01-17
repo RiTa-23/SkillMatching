@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Question;
 use App\Models\Language;
 use App\Models\Category;
+use App\Models\Company;
 
 class QuestionController extends Controller
 {
@@ -24,6 +25,15 @@ class QuestionController extends Controller
                 ];
             });
         return response()->json($questions, 200);
+    }
+
+    public function getAllQuestion()
+    {
+        $questions = Question::select('question_id', 'company_id', 'question_text')->get();
+
+        return response()->json([
+            'data' => $questions,
+        ], 200);
     }
 
     public function store(Request $request)
@@ -66,13 +76,13 @@ class QuestionController extends Controller
 
         $validated = $request->validate([
             'type' => 'required|in:language,category', // 'language' または 'category' のどちらか
-            'id' => 'required|integer', // 選択された言語またはカテゴリーのID
+            'id' => 'required|integer', // 選択された技術またはカテゴリーのID
         ]);
 
         $id = (int) $validated['id'];  // ここでIDを整数にキャスト
 
         if ($validated['type'] === 'language') {
-            // 言語に基づく関連する言語を取得
+            // 技術に基づく関連する技術を取得
             $relatedLanguages = Language::where('language_id', $id)->get();
             return response()->json(['data' => $relatedLanguages], 200);
         } elseif ($validated['type'] === 'category') {
@@ -81,5 +91,41 @@ class QuestionController extends Controller
             return response()->json(['data' => $relatedCategories], 200);
         }
     }
+    public function getOneQuestion(int $id)
+    {
+        try {
+            // 質問をIDで検索
+            $question = Question::findOrFail($id);
 
+            // 質問データをJSONで返却
+            //dd($question); // ここでデータを確認
+            return response()->json($question);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    // 質問を更新
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'question_text' => 'required|string|max:1000',
+            'language_id' => 'nullable|exists:languages,language_id',
+            'category_id' => 'nullable|exists:categories,category_id',
+        ]);
+
+        $question = Question::findOrFail($id);
+
+        // 質問の更新
+        $question->update([
+            'question_text' => $validated['question_text'],
+            'language_id' => $validated['language_id'],
+            'category_id' => $validated['category_id'],
+        ]);
+
+        return response()->json(['message' => 'Question updated successfully', 'data' => $question], 200);
+    }
 }

@@ -12,6 +12,9 @@ class CategoriesTableSeeder extends Seeder
         DB::table('categories')->insert([
             ['category_name' => '問題解決力'],
             ['category_name' => 'コミュニケーション力'],
+            ['category_name' => '協調性'],
+            ['category_name' => 'プレゼンテーション力'],
+            ['category_name' => 'リーダーシップ'],
         ]);
     }
 }

@@ -53,4 +53,10 @@ class Project extends Model
     {
         return $this->hasMany(ProjectFeedback::class, 'project_id', 'project_id');
     }
+
+    public function languages()
+    {
+        return $this->belongsToMany(Language::class, 'project_language', 'project_id', 'language_id')
+            ->withTimestamps();
+    }
 }

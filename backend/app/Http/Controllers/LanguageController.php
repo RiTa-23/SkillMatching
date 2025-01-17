@@ -87,7 +87,7 @@ class LanguageController extends Controller
         return response()->json($results);
     }
 
-    // ユーザーの希望言語を取得
+    // ユーザーの希望技術を取得
     public function getHopeLanguages()
     {
         $user = User::find(Auth::id());
@@ -106,7 +106,7 @@ class LanguageController extends Controller
         return response()->json($hopeLanguages, 200);
     }
 
-    // ユーザーの希望言語を更新
+    // ユーザーの希望技術を更新
     public function updateHopeLanguages(Request $request)
     {
         $request->validate([
@@ -122,7 +122,7 @@ class LanguageController extends Controller
         return response()->json(['message' => 'Hope languages updated successfully'], 200);
     }
 
-    // ユーザーの希望言語を削除
+    // ユーザーの希望技術を削除
     public function deleteHopeLanguage($language_id)
     {
         $user = User::find(Auth::id());

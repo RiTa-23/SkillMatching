@@ -61,7 +61,7 @@ const SkillField = ({ form, index, remove }: SkillFieldProps) => {
         setLanguages(data as Language[]);
       }
       if (error) {
-        toast.error("言語の取得に失敗しました", { position: "top-center" });
+        toast.error("技術の取得に失敗しました", { position: "top-center" });
       }
       setLoading(false);
     };
@@ -106,7 +106,7 @@ const SkillField = ({ form, index, remove }: SkillFieldProps) => {
                       language.language_id ===
                       form.getValues(`skills.${index}.language_id`)
                   )?.language_name
-                : "言語を選択"}
+                : "技術を選択"}
               <ChevronsUpDown className="opacity-50" />
             </Button>
           </PopoverTrigger>

@@ -13,7 +13,7 @@ class Language extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'language_name', // 言語名フィールド
+        'language_name', // 技術名フィールド
     ];
 
     public function users()
@@ -29,6 +29,12 @@ class Language extends Model
     public function hopeUsers()
     {
         return $this->belongsToMany(User::class, 'user_hope_language', 'language_id', 'user_id')
-                    ->withTimestamps();
+            ->withTimestamps();
+    }
+
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'project_language', 'language_id', 'project_id')
+            ->withTimestamps();
     }
 }

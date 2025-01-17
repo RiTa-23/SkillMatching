@@ -18,7 +18,7 @@ class UserHopeLanguageSeeder extends Seeder
 
         $data = [];
         foreach ($users as $userId) {
-            // 各ユーザーにランダムな言語を割り当てる
+            // 各ユーザーにランダムな技術を割り当てる（複数技術も可）
             $assignedLanguages = array_rand(array_flip($languages), random_int(1, min(3, count($languages))));
             $assignedLanguages = is_array($assignedLanguages) ? $assignedLanguages : [$assignedLanguages];
 
