@@ -29,7 +29,7 @@ class AnswerController extends Controller
         $answers = Answer::with('question', 'question.company')
             ->where('user_id', $user_id)
             ->get()
-            ->unique('question_id')
+            ->unique('question.company_id')
             ->values()
             ->take($limit)
             ->map(
