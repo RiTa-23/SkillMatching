@@ -19,7 +19,7 @@ class UsersTableSeeder extends Seeder
                 'name' => $faker->name, // ダミーの氏名
                 'birthday' => $faker->date, // ダミーの誕生日
                 'email' => $faker->unique()->safeEmail, // ユニークなメールアドレス
-                'role_id' => rand(1, 4), // ランダムな役割ID (1から4の間)
+                'role_id' => rand(3, 4), // ランダムな役割ID (1から4の間)
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -38,5 +38,15 @@ class UsersTableSeeder extends Seeder
                 }
             }
         }
+
+        // 企業アカウントを追加
+        $companyId = DB::table('users')->insertGetId([
+            'password' => bcrypt('password'), 
+            'name' => 'Company A', 
+            'email' => 'a@a.com', 
+            'role_id' => 2,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 }

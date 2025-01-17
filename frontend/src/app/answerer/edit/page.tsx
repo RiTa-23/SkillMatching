@@ -33,7 +33,7 @@ import type { HopeLanguage } from "@/types/Language";
 
 const SkillsSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  birthday: z.string().min(1, "Birthday is required"),
+  birthday: z.string().min(1, "Birthday is required").nullable(),
   email: z.string().email("Invalid email"),
   skills: z.array(
     z.object({
