@@ -1,5 +1,5 @@
 import Header from "@/components/header/Header";
-import { answererUrls } from "@/components/header/urls";
+import { answererUrls } from "@/components/header/AnswererUrls";
 
 export default function RootLayout({
   children,

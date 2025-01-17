@@ -79,6 +79,7 @@ const SigninForm = () => {
     if (data) {
       Cookies.set("token", (data as { token: string }).token);
       console.log("Login successful:", data);
+      router.push(`/company/project`);
     }
     if (error) {
       console.error("Validation errors:", error);
