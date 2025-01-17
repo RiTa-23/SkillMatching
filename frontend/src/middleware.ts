@@ -61,5 +61,8 @@ export async function middleware(req: NextRequest) {
 
 // ミドルウェアを適用するルートの設定
 export const config = {
-  matcher: ["/answerer/:path*", "/company/:path*"], // 適用対象のパス
+  matcher: [
+    // "/answerer/:path*",
+    // "/company/:path*"
+  ], // 適用対象のパス
 };

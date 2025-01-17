@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Faker\Factory as Faker;
 use App\Models\Project;
 
 class ProjectsTableSeeder extends Seeder
@@ -15,46 +16,27 @@ class ProjectsTableSeeder extends Seeder
      */
     public function run()
     {
-        $project = Project::insert([
-            [
-                'title' => 'システム開発案件',
-                'company_id' => 1, // 事前に companys テーブルに会社を追加しておく必要があります
-                'contents' => '業務システムの開発案件。詳細要件は後日提供予定。',
+        $faker = Faker::create();
+
+        for ($i = 0; $i <= 10; $i++) {
+            $projectId = Project::insertGetId([
+                'title' => $faker->realText(20),
+                'company_id' => rand(1, 3),
+                'contents' => $faker->realText(200),
                 'start_date' => Carbon::now()->subDays(10)->toDateString(),
                 'end_date' => Carbon::now()->addDays(20)->toDateString(),
-                'status' => '進行中',
+                'status' => ['進行中', '完了', '未着手'][array_rand(['進行中', '完了', '未着手'])],
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
-            ],
-            [
-                'title' => 'Webサイト制作案件',
-                'company_id' => 2,
-                'contents' => 'コーポレートサイトのリニューアル案件。',
-                'start_date' => Carbon::now()->subDays(30)->toDateString(),
-                'end_date' => Carbon::now()->subDays(5)->toDateString(),
-                'status' => '完了',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'title' => 'スマホアプリ開発案件',
-                'company_id' => 3,
-                'contents' => 'iOSおよびAndroidアプリの開発プロジェクト。',
-                'start_date' => Carbon::now()->addDays(5)->toDateString(),
-                'end_date' => Carbon::now()->addDays(60)->toDateString(),
-                'status' => '予定',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-        ]);
+            ]);
 
-        // プロジェクトと言語を紐付け
-        $project1 = Project::where('title', 'システム開発案件')->first();
-        $project2 = Project::where('title', 'Webサイト制作案件')->first();
-        $project3 = Project::where('title', 'スマホアプリ開発案件')->first();
-
-        $project1->languages()->attach([1, 2]);
-        $project2->languages()->attach([2, 3]);
-        $project3->languages()->attach([1, 3]);
+            $project = Project::find($projectId);
+            for ($j = 0; $j < rand(3, 5); $j++) {
+                $number = rand(1, 50);
+                if (!$project->languages()->where('project_language.language_id', $number)->exists()) {
+                    $project->languages()->attach($number);
+                }
+            }
+        }
     }
 }

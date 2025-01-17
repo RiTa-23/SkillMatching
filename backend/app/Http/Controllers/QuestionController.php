@@ -76,13 +76,13 @@ class QuestionController extends Controller
 
         $validated = $request->validate([
             'type' => 'required|in:language,category', // 'language' または 'category' のどちらか
-            'id' => 'required|integer', // 選択された言語またはカテゴリーのID
+            'id' => 'required|integer', // 選択された技術またはカテゴリーのID
         ]);
 
         $id = (int) $validated['id'];  // ここでIDを整数にキャスト
 
         if ($validated['type'] === 'language') {
-            // 言語に基づく関連する言語を取得
+            // 技術に基づく関連する技術を取得
             $relatedLanguages = Language::where('language_id', $id)->get();
             return response()->json(['data' => $relatedLanguages], 200);
         } elseif ($validated['type'] === 'category') {
@@ -91,7 +91,6 @@ class QuestionController extends Controller
             return response()->json(['data' => $relatedCategories], 200);
         }
     }
-
     public function getOneQuestion(int $id)
     {
         try {

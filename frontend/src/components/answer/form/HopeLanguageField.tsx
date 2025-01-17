@@ -51,7 +51,7 @@ const HopeLanguageField = ({ form, index, remove }: HopeLanguageFieldProps) => {
         setLanguages(data as Language[]);
       }
       if (error) {
-        toast.error("言語の取得に失敗しました", { position: "top-center" });
+        toast.error("技術の取得に失敗しました", { position: "top-center" });
       }
       setLoading(false);
     };
@@ -61,7 +61,9 @@ const HopeLanguageField = ({ form, index, remove }: HopeLanguageFieldProps) => {
 
   const deleteHopeLanguage = async (index: number) => {
     const token = Cookies.get("token");
-    const hopeLanguageId = form.getValues(`hope_languages.${index}.language_id`);
+    const hopeLanguageId = form.getValues(
+      `hope_languages.${index}.language_id`
+    );
     if (hopeLanguageId) {
       const { data, error } = await fetcher({
         url: `hope-language/${hopeLanguageId}`,
@@ -71,10 +73,10 @@ const HopeLanguageField = ({ form, index, remove }: HopeLanguageFieldProps) => {
         },
       });
       if (data) {
-        toast.success("希望言語を削除しました", { position: "top-center" });
+        toast.success("希望技術を削除しました", { position: "top-center" });
       }
       if (error) {
-        toast.error("希望言語の削除に失敗しました", { position: "top-center" });
+        toast.error("希望技術の削除に失敗しました", { position: "top-center" });
       }
     }
   };
@@ -90,17 +92,15 @@ const HopeLanguageField = ({ form, index, remove }: HopeLanguageFieldProps) => {
               className="w-[200px] justify-between"
               disabled={loading}
             >
-              {loading ? (
-                "Loading..."
-              ) : form.getValues(`hope_languages.${index}.language_id`) ? (
-                languages.find(
-                  (language) =>
-                    language.language_id ===
-                    form.getValues(`hope_languages.${index}.language_id`)
-                )?.language_name
-              ) : (
-                "言語を選択"
-              )}
+              {loading
+                ? "Loading..."
+                : form.getValues(`hope_languages.${index}.language_id`)
+                ? languages.find(
+                    (language) =>
+                      language.language_id ===
+                      form.getValues(`hope_languages.${index}.language_id`)
+                  )?.language_name
+                : "技術を選択"}
               <ChevronsUpDown className="opacity-50" />
             </Button>
           </PopoverTrigger>
