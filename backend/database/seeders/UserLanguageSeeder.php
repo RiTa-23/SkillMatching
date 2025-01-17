@@ -21,18 +21,18 @@ class UserLanguageSeeder extends Seeder
         // テーブルを初期化（データをクリア）
         DB::table('user_language')->truncate();
 
-        // ユーザーと言語を取得
+        // ユーザーと技術を取得
         $users = User::all();
         $languages = Language::all();
 
         if ($users->isEmpty() || $languages->isEmpty()) {
-            $this->command->warn('ユーザーまたは言語データが存在しません。データベースを確認してください。');
+            $this->command->warn('ユーザーまたは技術データが存在しません。データベースを確認してください。');
             return;
         }
 
         // データをランダムに生成して挿入
         foreach ($users as $user) {
-            $assignedLanguages = $languages->random(rand(1, 3)); // 各ユーザーに1～3つのランダムな言語を割り当て
+            $assignedLanguages = $languages->random(rand(1, 3)); // 各ユーザーに1～3つのランダムな技術を割り当て
 
             foreach ($assignedLanguages as $language) {
                 DB::table('user_language')->insert([

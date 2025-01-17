@@ -1,7 +1,7 @@
 "use client";
 
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface Resource {
   id: number;
@@ -14,14 +14,35 @@ interface Resource {
 
 const mockData: Resource[] = [
   // ここにモックデータを追加するか、実際のデータを取得するロジックを追加する
-  { id: 1, name: "エンジニア 1", language: "JavaScript", proficiency: "中級", communication: "4", problemSolving: "3" },
-  { id: 2, name: "エンジニア 2", language: "Python", proficiency: "上級", communication: "5", problemSolving: "4" },
-  { id: 3, name: "エンジニア 3", language: "Java", proficiency: "初級", communication: "3", problemSolving: "2" },
+  {
+    id: 1,
+    name: "エンジニア 1",
+    language: "JavaScript",
+    proficiency: "中級",
+    communication: "4",
+    problemSolving: "3",
+  },
+  {
+    id: 2,
+    name: "エンジニア 2",
+    language: "Python",
+    proficiency: "上級",
+    communication: "5",
+    problemSolving: "4",
+  },
+  {
+    id: 3,
+    name: "エンジニア 3",
+    language: "Java",
+    proficiency: "初級",
+    communication: "3",
+    problemSolving: "2",
+  },
 ];
 
 const ResourceDetail: React.FC = () => {
   const searchParams = useSearchParams();
-  const id = searchParams.get('id');
+  const id = searchParams.get("id");
   const [resource, setResource] = useState<Resource | null>(null);
 
   // useEffect(() => {
@@ -39,7 +60,7 @@ const ResourceDetail: React.FC = () => {
       language: "TypeScript",
       proficiency: "上級",
       communication: "5",
-      problemSolving: "5"
+      problemSolving: "5",
     });
   }, []);
 
@@ -53,7 +74,7 @@ const ResourceDetail: React.FC = () => {
       <div className="p-4 border">
         <p>ID: {resource.id}</p>
         <p>名前: {resource.name}</p>
-        <p>言語: {resource.language}</p>
+        <p>技術: {resource.language}</p>
         <p>熟練度: {resource.proficiency}</p>
         <p>コミュニケーション: {resource.communication}</p>
         <p>問題解決: {resource.problemSolving}</p>

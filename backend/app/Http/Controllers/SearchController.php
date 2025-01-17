@@ -8,7 +8,7 @@ use App\Models\Category;
 
 class SearchController extends Controller
 {
-    
+
     public function searchUsers(Request $request)
     {
         $request->validate([
@@ -41,7 +41,7 @@ class SearchController extends Controller
                 'user_category.level as category_level'
             );
 
-        // 言語フィルター
+        // 技術フィルター
         if ($languageId) {
             $query->where('user_language.language_id', $languageId);
         }
@@ -76,5 +76,4 @@ class SearchController extends Controller
 
         return response()->json($users, 200);
     }
-
 }

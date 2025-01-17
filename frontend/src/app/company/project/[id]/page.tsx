@@ -1,15 +1,16 @@
-import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import React from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Cog, CircleUser } from "lucide-react";
 
 const ProjectDetailPage = () => {
   const project = {
-    companyName: '株式会社H',
-    projectName: 'スキル可視化システムの開発',
-    projectDetail: '人によって言語の「できる」の基準が違うため、それを具体化するシステムの開発を行う',
-    members: ['u5', 'rita', 'えのっきー'],
-    technologies: ['Laravel', 'next.js']
+    companyName: "株式会社H",
+    projectName: "スキル可視化システムの開発",
+    projectDetail:
+      "人によって技術の「できる」の基準が違うため、それを具体化するシステムの開発を行う",
+    members: ["u5", "rita", "えのっきー"],
+    technologies: ["Laravel", "next.js"],
   };
 
   return (
@@ -20,25 +21,19 @@ const ProjectDetailPage = () => {
           <CardHeader>
             <CardTitle>案件元会社名</CardTitle>
           </CardHeader>
-          <CardContent>
-            {project.companyName}
-          </CardContent>
+          <CardContent>{project.companyName}</CardContent>
         </Card>
         <Card className="mb-4">
           <CardHeader>
             <CardTitle>案件名</CardTitle>
           </CardHeader>
-          <CardContent>
-            {project.projectName}
-          </CardContent>
+          <CardContent>{project.projectName}</CardContent>
         </Card>
         <Card className="mb-4">
           <CardHeader>
             <CardTitle>案件の詳細</CardTitle>
           </CardHeader>
-          <CardContent>
-            {project.projectDetail}
-          </CardContent>
+          <CardContent>{project.projectDetail}</CardContent>
         </Card>
         <Card className="mb-4">
           <CardHeader>
@@ -51,9 +46,7 @@ const ProjectDetailPage = () => {
           </CardHeader>
           <CardContent>
             {project.members.map((member, index) => (
-              <Badge>
-                {member}
-              </Badge>
+              <Badge>{member}</Badge>
             ))}
           </CardContent>
         </Card>

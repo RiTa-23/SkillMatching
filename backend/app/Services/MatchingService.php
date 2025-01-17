@@ -9,10 +9,10 @@ class MatchingService
 {
     public function getMatchingUsersForProject(Project $project)
     {
-        // プロジェクトの必要な言語を取得
+        // プロジェクトの必要な技術を取得
         $requiredLanguages = $project->languages;
 
-        // 全社員のスキルと希望言語を取得
+        // 全社員のスキルと希望技術を取得
         $users = User::with(['languages', 'hopeLanguages'])->get();
 
         // マッチング結果を格納する配列
@@ -31,14 +31,14 @@ class MatchingService
                     $matchingScore += $userSkill->pivot->level * 10;
                 }
 
-                // 希望言語なら加点
+                // 希望技術なら加点
                 if ($userPreference) {
                     $matchingScore += 5;
                 }
             }
 
             // 一定のスコア以上をマッチング対象とする
-            if ($matchingScore > 10) {
+            if ($matchingScore > 0) {
                 $matchingResults[] = [
                     'user' => $user,
                     'score' => $matchingScore,

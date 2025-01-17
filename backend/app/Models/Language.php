@@ -13,7 +13,7 @@ class Language extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'language_name', // 言語名フィールド
+        'language_name', // 技術名フィールド
     ];
 
     public function users()

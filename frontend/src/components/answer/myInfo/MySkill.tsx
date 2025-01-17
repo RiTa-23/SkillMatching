@@ -78,7 +78,7 @@ const MySkill = () => {
       setHopeLanguages(data as HopeLanguage[]);
     }
     if (error) {
-      toast.error("希望言語の取得に失敗しました", { position: "top-center" });
+      toast.error("希望技術の取得に失敗しました", { position: "top-center" });
     }
     setLoading(false);
   };
@@ -118,7 +118,7 @@ const MySkill = () => {
               </TableBody>
             </Table>
             <div className="p-4">
-              <p>使用可能言語</p>
+              <p>使用可能技術</p>
               <div className="space-x-2 mt-4">
                 {skills?.map((skill) => (
                   <HoverCard key={skill.language_id}>
@@ -139,7 +139,7 @@ const MySkill = () => {
               </div>
             </div>
             <div className="p-4">
-              <p>希望言語</p>
+              <p>希望技術</p>
               <div className="space-x-2 mt-4">
                 {hopeLanguages.map((language) => (
                   <Badge

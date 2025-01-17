@@ -8,8 +8,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('languages', function (Blueprint $table) {
-            $table->id('language_id'); // 言語ID (主キー)
-            $table->string('language_name'); // 言語名
+            $table->id('language_id'); // 技術ID (主キー)
+            $table->string('language_name'); // 技術名
             $table->timestamps(); // created_at, updated_at
         });
     }

@@ -13,7 +13,7 @@ class Company extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'company_name', // 言語名フィールド
+        'company_name', // 技術名フィールド
     ];
 
     public function questions()
