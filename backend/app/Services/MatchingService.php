@@ -38,7 +38,7 @@ class MatchingService
             }
 
             // 一定のスコア以上をマッチング対象とする
-            if ($matchingScore > 0) {
+            if ($matchingScore > 20) {
                 $matchingResults[] = [
                     'user' => $user,
                     'score' => $matchingScore,
